@@ -47,7 +47,7 @@ namespace osm
 
 	public:
 		OggDecorder();
-		~OggDecorder();
+		virtual ~OggDecorder();
 		bool Load(uint8_t* data, int32_t size) override;
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) override;
 		int32_t GetSampleCount() override;

@@ -5,7 +5,18 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 project(OpenSoundMixer)
 
 # CMake バージョンチェック
+if (MSVC)
+cmake_minimum_required(VERSION 2.8.11)
+else()
 cmake_minimum_required(VERSION 2.8)
+endif()
+
+# コンパイル設定
+if (MSVC)
+	# 特に何も
+else()
+	set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC" ${CMAKE_CXX_FLAGS})
+endif()
 
 # ソースコード設定
 set(common_src

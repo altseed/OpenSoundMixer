@@ -1,13 +1,9 @@
 
 #pragma once
 
-#include <stdio.h>
-#include <stdint.h>
-#include <string>
-#include <vector>
-#include <memory>
-
 #include "OpenSoundMixer.h"
+#include "OpenSoundMixerInternal.h"
+
 #include "osm.Decorder.h"
 #include "osm.ReferenceObject.h"
 
@@ -26,7 +22,7 @@ namespace osm
 	
 	public:
 		Sound_Impl();
-		~Sound_Impl();
+		virtual ~Sound_Impl();
 
 		bool Load(void* data, int32_t size, bool isDecompressed);
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);

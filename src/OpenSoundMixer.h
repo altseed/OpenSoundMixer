@@ -49,15 +49,16 @@ namespace osm
 		: public IReference
 	{
 	protected:
-		Sound() = default;
-		virtual ~Sound() = default;
+		Sound() {}
+		virtual ~Sound() {}
 	public:
 	};
 
 	class Manager
 	{
-	private:
-
+	protected:
+		Manager(){}
+		~Manager(){}
 	public:
 
 	};

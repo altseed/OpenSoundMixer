@@ -176,7 +176,7 @@ namespace osm
 
 			int32_t chunkSize = 0;
 
-			if (_stricmp("fmt ", chunk) == 0)
+			if (STRICMP("fmt ", chunk) == 0)
 			{
 				// チャンクサイズ
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
@@ -195,7 +195,7 @@ namespace osm
 					return false;
 				}
 			}
-			else if (_stricmp("data", chunk) == 0)
+			else if (STRICMP("data", chunk) == 0)
 			{
 				// チャンクサイズ
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;

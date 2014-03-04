@@ -51,7 +51,7 @@ namespace osm
 
 	public:
 		WaveDecorder();
-		~WaveDecorder();
+		virtual ~WaveDecorder();
 		bool Load(uint8_t* data, int32_t size) override;
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) override;
 		int32_t GetSampleCount() override;

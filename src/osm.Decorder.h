@@ -2,6 +2,7 @@
 #pragma once
 
 #include "OpenSoundMixer.h"
+#include "OpenSoundMixerInternal.h"
 
 namespace osm
 {
@@ -15,8 +16,8 @@ namespace osm
 	class Decorder
 	{
 	public:
-		Decorder() = default;
-		virtual ~Decorder() = default;
+		Decorder(){}
+		virtual ~Decorder(){}
 		virtual bool Load(uint8_t* data, int32_t size) = 0;
 		virtual int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) = 0;
 		virtual int32_t GetSampleCount() = 0;

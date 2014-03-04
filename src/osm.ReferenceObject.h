@@ -2,6 +2,7 @@
 #pragma once
 
 #include "OpenSoundMixer.h"
+#include "OpenSoundMixerInternal.h"
 
 namespace osm
 {

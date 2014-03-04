@@ -1,6 +1,8 @@
 
 #include "osm.Manager_Impl_PulseAudio.h"
 
+#include <dlfcn.h>
+
 namespace osm
 {
 	void Manager_Impl_PulseAudio::Reset()
@@ -10,60 +12,63 @@ namespace osm
 			m_threading = false;
 			m_thread.join();
 		}
-
-		if (m_sourceVoice != nullptr)
+		
+		if(m_stream != nullptr)
 		{
-			m_sourceVoice->Stop();
-			m_sourceVoice->DestroyVoice();
-			m_sourceVoice = nullptr;
+			CALL_FUNCPTR_MV(pa_stream_disconnect)(m_stream);
+			CALL_FUNCPTR_MV(pa_stream_unref)(m_stream);
+			m_stream = nullptr;
 		}
 
-		if (m_masteringVoice != nullptr)
+		if(m_context != nullptr)
 		{
-			m_masteringVoice->DestroyVoice();
-			m_masteringVoice = nullptr;
+			CALL_FUNCPTR_MV(pa_context_disconnect)(m_context);
+			CALL_FUNCPTR_MV(pa_context_unref)(m_context);
+			m_context = nullptr;
 		}
-
-		if (m_xaudio != nullptr)
+		
+		if(m_mainLoop != nullptr)
 		{
-			m_xaudio->Release();
-			m_xaudio = nullptr;
+			CALL_FUNCPTR_MV(pa_mainloop_free)(m_mainLoop);
+			m_mainLoop = nullptr;
 		}
 	}
 
 	void Manager_Impl_PulseAudio::ThreadFunc(void* p)
 	{
-		Manager_Impl_XAudio2* this_ = (Manager_Impl_XAudio2*) p;
-
+		Manager_Impl_PulseAudio* this_ = (Manager_Impl_PulseAudio*) p;
+		
 		Sample bufs[4][44100 / 4];
 		int32_t targetBuf = 0;
-
 		int32_t current = 0;
 
 		while (this_->m_threading)
 		{
-			XAUDIO2_VOICE_STATE state;
-			this_->m_sourceVoice->GetState(&state);
-			if (state.BuffersQueued < 2)
+			if(PA_STREAM_READY==this_->CALL_FUNCPTR_MV(pa_stream_get_state)(this_->m_stream))
 			{
-				this_->ReadSamples(bufs[targetBuf], 44100 / 4);
+				size_t writableSize = this_->CALL_FUNCPTR_MV(pa_stream_writable_size)(this_->m_stream);
+				if( writableSize > 44100 / 4 * sizeof(Sample) ) writableSize = 44100 / 4 * sizeof(Sample);
 
-				XAUDIO2_BUFFER xbuf = { 0 };
-				xbuf.AudioBytes = 44100 / 4 * sizeof(Sample);
-				xbuf.pAudioData = (uint8_t*) bufs[targetBuf];
-				xbuf.Flags = XAUDIO2_END_OF_STREAM;
-				targetBuf = (targetBuf + 1) % 4;
+				this_->ReadSamples(bufs[0], writableSize / sizeof(Sample) );
 
-				this_->m_sourceVoice->SubmitSourceBuffer(&xbuf);
+				this_->CALL_FUNCPTR_MV(pa_stream_write)(
+					this_->m_stream,
+					bufs[0],
+					writableSize,
+					NULL,
+					0,
+					PA_SEEK_RELATIVE);
+			}
+			else
+			{
+				Sleep(1);
 			}
 		}
 
 		// I‚í‚è‚Ü‚Å‘Ò‚Â
 		while (true)
 		{
-			XAUDIO2_VOICE_STATE state;
-			this_->m_sourceVoice->GetState(&state);
-			if (state.BuffersQueued != 0)
+			if(PA_STREAM_READY != this_->CALL_FUNCPTR_MV(pa_stream_get_state)(this_->m_stream))
 			{
 				Sleep(1);
 			}
@@ -75,10 +80,11 @@ namespace osm
 	}
 
 	Manager_Impl_PulseAudio::Manager_Impl_PulseAudio()
-		: m_xaudio(nullptr)
-		, m_masteringVoice(nullptr)
-		, m_sourceVoice(nullptr)
+		: m_dll(nullptr)
 		, m_threading(false)
+		, m_mainLoop(nullptr)
+		, m_context(nullptr)
+		, m_stream(nullptr)
 	{
 
 	}
@@ -86,62 +92,80 @@ namespace osm
 	Manager_Impl_PulseAudio::~Manager_Impl_PulseAudio()
 	{
 		Reset();
+
+		if(m_dll != nullptr)
+		{
+			dlclose(m_dll);
+			m_dll = nullptr;
+		}
 	}
 
 	bool Manager_Impl_PulseAudio::InitializeInternal()
 	{
-		::CoInitialize(0);
+		// load functions
+		m_dll = dlopen("libpulse.so.0", RTLD_LAZY);
+		if(m_dll==nullptr) return false;
+		
+		LOAD_FUNCPTR_MV(pa_mainloop_new)
+		LOAD_FUNCPTR_MV(pa_context_new)
+		LOAD_FUNCPTR_MV(pa_context_connect)
+		LOAD_FUNCPTR_MV(pa_mainloop_get_api)
+		LOAD_FUNCPTR_MV(pa_mainloop_iterate)
+		LOAD_FUNCPTR_MV(pa_context_get_state)
+		LOAD_FUNCPTR_MV(pa_stream_new)
+		LOAD_FUNCPTR_MV(pa_stream_get_state)
+		LOAD_FUNCPTR_MV(pa_stream_writable_size)
+		LOAD_FUNCPTR_MV(pa_stream_write)
+		LOAD_FUNCPTR_MV(pa_stream_disconnect)
+		LOAD_FUNCPTR_MV(pa_stream_unref)
+		LOAD_FUNCPTR_MV(pa_context_disconnect)
+		LOAD_FUNCPTR_MV(pa_context_unref)
+		LOAD_FUNCPTR_MV(pa_mainloop_free)		
 
-		HRESULT hr;
-		WAVEFORMATEX format = { 0 };
+		m_mainLoop = CALL_FUNCPTR_MV(pa_mainloop_new)();
+		if( m_mainLoop == nullptr ) return false;
 
-		uint32_t flags = 0;
-#ifdef _DEBUG
-		flags |= XAUDIO2_DEBUG_ENGINE;
-#endif
-		hr = XAudio2Create(&m_xaudio, flags);
-		if (FAILED(hr))
+		m_context = CALL_FUNCPTR_MV(pa_context_new)(CALL_FUNCPTR_MV(pa_mainloop_get_api)(m_mainLoop), "OSM" );
+		if( m_context == nullptr ) return false;
+
+		CALL_FUNCPTR_MV(pa_context_connect)(m_context, NULL,(pa_context_flags_t)0, NULL);
+
+		int32_t readyCount = 0;
+		while(true)
 		{
-			printf("Failed XAudio2Create\n");
-			goto End;
+			CALL_FUNCPTR_MV(pa_mainloop_iterate)(m_mainLoop,0,NULL);
+
+			if(PA_CONTEXT_READY==CALL_FUNCPTR_MV(pa_context_get_state)(m_context))
+			{
+				break;
+			}
+			else
+			{
+				readyCount++;
+				Sleep(1);
+				if(readyCount>1000) break;
+			}
 		}
 
-		hr = m_xaudio->CreateMasteringVoice(&m_masteringVoice);
-		if (FAILED(hr))
+		if(readyCount>1000) return false;
+
+		const pa_sample_spec spec =
 		{
-			printf("Failed CreateMasteringVoice\n");
-			goto End;
-		}
+			PA_SAMPLE_S16LE,
+			44100,
+			2
+		};
 
-		format.wFormatTag = WAVE_FORMAT_PCM;
-		format.nChannels = 2;
-		format.wBitsPerSample = 16;
-		format.nSamplesPerSec = 44100;
-		format.nBlockAlign = format.wBitsPerSample / 8 * format.nChannels;
-		format.nAvgBytesPerSec = format.nSamplesPerSec * format.nBlockAlign;
-
-		hr = m_xaudio->CreateSourceVoice(&m_sourceVoice, &format);
-		if (FAILED(hr))
-		{
-			printf("Failed CreateSourceVoice\n");
-			goto End;
-		}
-
-		m_sourceVoice->Start();
+		m_stream = CALL_FUNCPTR_MV(pa_stream_new)(m_context,"OSMStream",&spec,NULL);
+		if( m_stream == nullptr ) return false;
 
 		m_threading = true;
 		m_thread = std::thread(ThreadFunc, this);
 		return true;
-
-	End:;
-		Reset();
-		::CoUninitialize();
-		return false;
 	}
 
 	void Manager_Impl_PulseAudio::FinalizeInternal()
 	{
 		Reset();
-		::CoUninitialize();
 	}
 }

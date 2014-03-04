@@ -1,5 +1,10 @@
 
+#if _WIN32
 #include "Manager/osm.Manager_Impl_XAudio2.h"
+#else
+#include "Manager/osm.Manager_Impl_PulseAudio.h"
+#endif
+
 #include "osm.Sound_Impl.h"
 
 #if _WIN32
@@ -19,12 +24,29 @@ int main(int argc, char **argv)
 	osm::Sound* staticSound = nullptr;
 	osm::Sound* streamSound = nullptr;
 
+#if _WIN32
 	auto manager = new osm::Manager_Impl_XAudio2();
-	manager->Initialize();
+#else
+	auto manager = new osm::Manager_Impl_PulseAudio();
+#endif
+
+	if( manager->Initialize() )
+	{
+		printf("Scceed in initializing manager.\n");
+	}
+	else
+	{
+		printf("Failed to initialize manager.\n");
+	}
 
 	{
 		FILE* fp = nullptr;
+		
+#if _WIN32
 		fopen_s(&fp, "se1.wav", "rb");
+#else
+		fp = fopen("se1.wav", "rb");
+#endif
 		if (fp == nullptr) return 0;
 
 		fseek(fp, 0, SEEK_END);
@@ -41,7 +63,11 @@ int main(int argc, char **argv)
 
 	{
 		FILE* fp = nullptr;
+#if _WIN32
 		fopen_s(&fp, "bgm1.ogg", "rb");
+#else
+		fp = fopen("bgm1.ogg", "rb");
+#endif
 		if (fp == nullptr) return 0;
 
 		fseek(fp, 0, SEEK_END);
@@ -56,13 +82,15 @@ int main(int argc, char **argv)
 		streamSound = manager->CreateSound(data.data(), data.size(), true);
 	}
 
+	printf("Loaded resources.\n");
+
 	auto id1 = manager->Play(streamSound);
-	Sleep(1000);
+	::osm::Sleep(1000);
 	auto id2 = manager->Play(staticSound);
 	
 	while (manager->IsPlaying(id1) || manager->IsPlaying(id2))
 	{
-		Sleep(1);
+		::osm::Sleep(1);
 	}
 
 	manager->Finalize();
@@ -70,7 +98,7 @@ int main(int argc, char **argv)
 	streamSound->Release();
 	delete manager;
 
-	
+	return 0;
 }
 
 

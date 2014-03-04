@@ -6,3 +6,4 @@ mkdir cmake
 cmake -G "Unix Makefiles" ../;
 make;)
 
+cp cmake/OpenSoundMixerTest bin/

@@ -60,12 +60,18 @@ add_library( osmlib STATIC ${common_src} )
 if (MSVC)
 
 else()
+	list(APPEND common_lib dl )
+	list(APPEND common_lib ogg )
+	list(APPEND common_lib vorbisfile )
+
 	FIND_PACKAGE(PulseAudio REQUIRED)
 	list(APPEND osmtest ${PulseAudio_LIBRARY})
 
 	find_package(Threads REQUIRED)
 	list(APPEND common_lib ${CMAKE_THREAD_LIBS_INIT})
 endif()
+
+target_link_libraries(osmtest ${common_lib}) 
 
 # ÉtÉâÉOèàóù
 if (MSVC)

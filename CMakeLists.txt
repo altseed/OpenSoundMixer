@@ -21,6 +21,7 @@ endif()
 # ソースコード設定
 set(common_src
 	src/osm.Decorder.cpp
+	src/osm.Manager.cpp
 	src/osm.Manager_Impl.cpp
 	src/osm.ReferenceObject.cpp
 	src/osm.Sound_Impl.cpp
@@ -53,6 +54,9 @@ include_directories(
 	src/
 	)
 
+# 
+link_directories(${PROJECT_SOURCE_DIR}/lib/)
+
 # コンパイル先を追加
 add_executable( osmtest ${test_src} )
 add_library( osmlib STATIC ${common_src} )
@@ -63,6 +67,7 @@ else()
 	list(APPEND common_lib dl )
 	list(APPEND common_lib ogg )
 	list(APPEND common_lib vorbisfile )
+	list(APPEND common_lib OpenSoundMixer )
 
 	FIND_PACKAGE(PulseAudio REQUIRED)
 	list(APPEND osmtest ${PulseAudio_LIBRARY})

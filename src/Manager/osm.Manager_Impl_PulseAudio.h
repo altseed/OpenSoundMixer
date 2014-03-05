@@ -40,6 +40,7 @@ namespace osm
 		FUNCPTR_MV(pa_context_disconnect)
 		FUNCPTR_MV(pa_context_unref)
 		FUNCPTR_MV(pa_mainloop_free)
+		FUNCPTR_MV(pa_stream_get_underflow_index)
 
 		void Reset();
 

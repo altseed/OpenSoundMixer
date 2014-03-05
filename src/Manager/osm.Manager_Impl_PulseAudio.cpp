@@ -37,7 +37,8 @@ namespace osm
 	void Manager_Impl_PulseAudio::ThreadFunc(void* p)
 	{
 		Manager_Impl_PulseAudio* this_ = (Manager_Impl_PulseAudio*) p;
-		
+		bool hasError = false;
+
 		auto iterate = [this_]() -> void 
 		{
 			this_->CALL_FUNCPTR_MV(pa_mainloop_iterate)(this_->m_mainLoop,0,NULL);
@@ -45,7 +46,7 @@ namespace osm
 	
 		Sample bufs[44100 / 4];
 
-		while (this_->m_threading)
+		while (this_->m_threading && !hasError)
 		{
 			if(PA_STREAM_READY==this_->CALL_FUNCPTR_MV(pa_stream_get_state)(this_->m_stream))
 			{
@@ -74,11 +75,17 @@ namespace osm
 				Sleep(1);
 			}
 
+			if(0<=this_->CALL_FUNCPTR_MV(pa_stream_get_underflow_index)(this_->m_stream))
+			{
+				hasError = true;
+				printf("Underflow is detected.");
+			}
+		
 			iterate();
 		}
 
 		// I‚í‚è‚Ü‚Å‘Ò‚Â
-		while (true)
+		while (!hasError)
 		{
 			size_t writableSize = this_->CALL_FUNCPTR_MV(pa_stream_writable_size)(this_->m_stream);
 			if(writableSize == 0)
@@ -136,6 +143,7 @@ namespace osm
 		LOAD_FUNCPTR_MV(pa_context_disconnect)
 		LOAD_FUNCPTR_MV(pa_context_unref)
 		LOAD_FUNCPTR_MV(pa_mainloop_free)		
+		LOAD_FUNCPTR_MV(pa_stream_get_underflow_index)
 
 		m_mainLoop = CALL_FUNCPTR_MV(pa_mainloop_new)();
 		if( m_mainLoop == nullptr ) return false;

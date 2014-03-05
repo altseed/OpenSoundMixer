@@ -38,22 +38,32 @@ namespace osm
 	{
 		Manager_Impl_PulseAudio* this_ = (Manager_Impl_PulseAudio*) p;
 		
-		Sample bufs[4][44100 / 4];
-		int32_t targetBuf = 0;
-		int32_t current = 0;
+		auto iterate = [this_]() -> void 
+		{
+			this_->CALL_FUNCPTR_MV(pa_mainloop_iterate)(this_->m_mainLoop,0,NULL);
+		};
+	
+		Sample bufs[44100 / 4];
 
 		while (this_->m_threading)
 		{
 			if(PA_STREAM_READY==this_->CALL_FUNCPTR_MV(pa_stream_get_state)(this_->m_stream))
 			{
 				size_t writableSize = this_->CALL_FUNCPTR_MV(pa_stream_writable_size)(this_->m_stream);
+			
+				if( writableSize == 0)
+				{
+					iterate();
+					Sleep(1);
+					continue;
+				}
+	
 				if( writableSize > 44100 / 4 * sizeof(Sample) ) writableSize = 44100 / 4 * sizeof(Sample);
 
-				this_->ReadSamples(bufs[0], writableSize / sizeof(Sample) );
-
+				this_->ReadSamples(bufs, writableSize / sizeof(Sample) );
 				this_->CALL_FUNCPTR_MV(pa_stream_write)(
 					this_->m_stream,
-					bufs[0],
+					bufs,
 					writableSize,
 					NULL,
 					0,
@@ -63,13 +73,17 @@ namespace osm
 			{
 				Sleep(1);
 			}
+
+			iterate();
 		}
 
 		// I‚í‚è‚Ü‚Å‘Ò‚Â
 		while (true)
 		{
-			if(PA_STREAM_READY != this_->CALL_FUNCPTR_MV(pa_stream_get_state)(this_->m_stream))
+			size_t writableSize = this_->CALL_FUNCPTR_MV(pa_stream_writable_size)(this_->m_stream);
+			if(writableSize == 0)
 			{
+				iterate();
 				Sleep(1);
 			}
 			else
@@ -113,6 +127,7 @@ namespace osm
 		LOAD_FUNCPTR_MV(pa_mainloop_iterate)
 		LOAD_FUNCPTR_MV(pa_context_get_state)
 		LOAD_FUNCPTR_MV(pa_stream_new)
+		LOAD_FUNCPTR_MV(pa_stream_connect_playback)
 		LOAD_FUNCPTR_MV(pa_stream_get_state)
 		LOAD_FUNCPTR_MV(pa_stream_writable_size)
 		LOAD_FUNCPTR_MV(pa_stream_write)
@@ -158,6 +173,8 @@ namespace osm
 
 		m_stream = CALL_FUNCPTR_MV(pa_stream_new)(m_context,"OSMStream",&spec,NULL);
 		if( m_stream == nullptr ) return false;
+
+		CALL_FUNCPTR_MV(pa_stream_connect_playback)(m_stream,NULL,NULL,(pa_stream_flags_t)0,NULL,NULL);
 
 		m_threading = true;
 		m_thread = std::thread(ThreadFunc, this);

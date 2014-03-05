@@ -31,6 +31,7 @@ namespace osm
 		FUNCPTR_MV(pa_mainloop_iterate)
 		FUNCPTR_MV(pa_context_get_state)
 		FUNCPTR_MV(pa_stream_new)
+		FUNCPTR_MV(pa_stream_connect_playback)
 		FUNCPTR_MV(pa_stream_get_state)
 		FUNCPTR_MV(pa_stream_writable_size)
 		FUNCPTR_MV(pa_stream_write)

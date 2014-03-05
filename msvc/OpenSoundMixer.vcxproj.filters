@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\osm.Decorder.cpp" />
+    <ClCompile Include="..\src\osm.ReferenceObject.cpp" />
+    <ClCompile Include="..\src\osm.Manager_Impl.cpp" />
+    <ClCompile Include="..\src\osm.Sound_Impl.cpp" />
+    <ClCompile Include="..\src\Decorder\osm.OggDecorder.cpp">
+      <Filter>Decorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Decorder\osm.WaveDecorder.cpp">
+      <Filter>Decorder</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Manager\osm.Manager_Impl_XAudio2.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Manager\osm.Manager_Impl_PulseAudio.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\OpenSoundMixer.h" />
+    <ClInclude Include="..\src\osm.Decorder.h" />
+    <ClInclude Include="..\src\osm.ReferenceObject.h" />
+    <ClInclude Include="..\src\osm.Manager_Impl.h" />
+    <ClInclude Include="..\src\osm.Sound_Impl.h" />
+    <ClInclude Include="..\src\Decorder\osm.OggDecorder.h">
+      <Filter>Decorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Decorder\osm.WaveDecorder.h">
+      <Filter>Decorder</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Manager\osm.Manager_Impl_XAudio2.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Manager\osm.Manager_Impl_PulseAudio.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Decorder">
+      <UniqueIdentifier>{91236f2f-e740-45fa-aa81-98669940c12a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{38d7da72-896a-45b1-bf27-d7ec7b6063b7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

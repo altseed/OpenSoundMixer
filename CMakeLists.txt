@@ -103,8 +103,8 @@ else()
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME "OpenSoundMixer" )
 set_target_properties(osmtest PROPERTIES OUTPUT_NAME "OpenSoundMixerTest" )
 
-set_target_properties(aceCommon PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "lib/" )
-set_target_properties(aceCommon PROPERTIES LIBRARY_OUTPUT_DIRECTORY "lib/" )
+set_target_properties(osmlib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "../lib/" )
+set_target_properties(osmlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY "../lib/" )
 endif()
 
 install(

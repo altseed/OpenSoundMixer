@@ -15,11 +15,33 @@ namespace osm
 
 		for (auto& s : m_soundStates)
 		{
+			if (s.second.IsPaused) continue;
+
+			float v = s.second.Volume * s.second.FadeVolume;
+
 			auto size = s.second.SoundPtr->GetSamples(m_tempSamples.data(), s.second.SamplePos, sampleCount);
 			for (int32_t i = 0; i < size; i++)
 			{
-				auto l = (int32_t) samples[i].Left + (int32_t) m_tempSamples[i].Left;
-				auto r = (int32_t) samples[i].Right + (int32_t) m_tempSamples[i].Right;
+				if (s.second.FadeGradient != 0.0f)
+				{
+					v = s.second.Volume * s.second.FadeVolume;
+					s.second.FadeVolume += s.second.FadeGradient;
+				
+					if (s.second.FadeGradient > 0 && s.second.FadeVolume >= 1.0f)
+					{
+						s.second.FadeGradient = 0;
+						s.second.Volume = 1.0f;
+					}
+
+					if (s.second.FadeGradient < 0 && s.second.FadeVolume <= 0.0f)
+					{
+						s.second.FadeGradient = 0;
+						s.second.Volume = 0.0f;
+					}
+				}
+
+				auto l = (int32_t) samples[i].Left + (int32_t) (m_tempSamples[i].Left * v);
+				auto r = (int32_t) samples[i].Right + (int32_t) (m_tempSamples[i].Right * v);
 
 				samples[i].Left = Clamp(l, 32767, -32768);
 				samples[i].Right = Clamp(r, 32767, -32768);
@@ -91,7 +113,12 @@ namespace osm
 
 		SoundState s;
 		s.SamplePos = 0;
+		s.IsPaused = false;
+		s.Volume = 1.0f;
 		s.SoundPtr = (Sound_Impl*) sound;
+
+		s.FadeGradient = 0.0f;
+		s.FadeVolume = 1.0f;
 
 		SafeAddRef(s.SoundPtr);
 		m_soundStates[m_stateID] = s;
@@ -127,6 +154,71 @@ namespace osm
 			{
 				SafeRelease(s->second.SoundPtr);
 				m_soundStates.erase(id);
+			}
+		}
+	}
+
+	void Manager_Impl::Pause(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		{
+			auto s = m_soundStates.find(id);
+			if (s != m_soundStates.end())
+			{
+				s->second.IsPaused = true;
+			}
+		}
+	}
+
+	void Manager_Impl::Resume(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		{
+			auto s = m_soundStates.find(id);
+			if (s != m_soundStates.end())
+			{
+				s->second.IsPaused = false;
+			}
+		}
+	}
+
+	void Manager_Impl::SetVolume(int32_t id, float volume)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		{
+			auto s = m_soundStates.find(id);
+			if (s != m_soundStates.end())
+			{
+				s->second.Volume = volume;
+			}
+		}
+	}
+
+	void Manager_Impl::FadeIn(int32_t id, float second)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		{
+			auto s = m_soundStates.find(id);
+			if (s != m_soundStates.end())
+			{
+				s->second.FadeGradient = 1.0f / 44100.0f / second;
+			}
+		}
+	}
+
+	void Manager_Impl::FadeOut(int32_t id, float second)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		{
+			auto s = m_soundStates.find(id);
+			if (s != m_soundStates.end())
+			{
+				s->second.FadeGradient = - 1.0f / 44100.0f / second;
 			}
 		}
 	}

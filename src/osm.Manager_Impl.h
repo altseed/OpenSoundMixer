@@ -18,11 +18,17 @@ namespace osm
 		, public ReferenceObject
 	{
 	private:
-	
+
 		struct SoundState
 		{
-			int32_t				SamplePos;
-			Sound_Impl*	SoundPtr;
+			int32_t			SamplePos;
+			Sound_Impl*		SoundPtr;
+			bool			IsPaused;
+			float			Volume;
+
+			float			FadeGradient;
+			float			FadeVolume;
+
 		};
 
 		int32_t	m_stateID;
@@ -63,6 +69,16 @@ namespace osm
 		void StopAll() override;
 
 		void Stop(int32_t id) override;
+
+		void Pause(int32_t id) override;
+
+		void Resume(int32_t id) override;
+
+		void SetVolume(int32_t id, float volume) override;
+
+		void FadeIn(int32_t id, float second) override;
+
+		void FadeOut(int32_t id, float second) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

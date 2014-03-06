@@ -76,6 +76,16 @@ namespace osm
 
 		virtual void Stop(int32_t id) = 0;
 
+		virtual void Pause(int32_t id) = 0;
+
+		virtual void Resume(int32_t id) = 0;
+
+		virtual void SetVolume(int32_t id, float volume) = 0;
+
+		virtual void FadeIn(int32_t id, float second) = 0;
+
+		virtual void FadeOut(int32_t id, float second) = 0;
+
 		static Manager* Create();
 	};
 

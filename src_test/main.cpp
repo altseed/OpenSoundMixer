@@ -1,4 +1,7 @@
 
+#include <vector>
+#include <string>
+
 #if _DEBUG
 #pragma comment(lib,"Debug/libogg_static.lib")
 #pragma comment(lib,"Debug/libvorbis_static.lib")
@@ -11,15 +14,7 @@
 #pragma comment(lib,"Release/OpenSoundMixer.lib")
 #endif
 
-
-#if _WIN32
-#include "Manager/osm.Manager_Impl_XAudio2.h"
-#else
-#include "Manager/osm.Manager_Impl_PulseAudio.h"
-#endif
-
-#include "osm.Sound_Impl.h"
-
+#include "OpenSoundMixer.h"
 #if _WIN32
 #include <Windows.h>
 std::wstring ToWide(const char* pText);
@@ -37,11 +32,7 @@ int main(int argc, char **argv)
 	osm::Sound* staticSound = nullptr;
 	osm::Sound* streamSound = nullptr;
 
-#if _WIN32
-	auto manager = new osm::Manager_Impl_XAudio2();
-#else
-	auto manager = new osm::Manager_Impl_PulseAudio();
-#endif
+	auto manager = osm::Manager::Create();
 
 	if( manager->Initialize() )
 	{
@@ -50,6 +41,8 @@ int main(int argc, char **argv)
 	else
 	{
 		printf("Failed to initialize manager.\n");
+		manager->Release();
+		return 0;
 	}
 
 	{
@@ -109,7 +102,7 @@ int main(int argc, char **argv)
 	manager->Finalize();
 	staticSound->Release();
 	streamSound->Release();
-	delete manager;
+	manager->Release();
 
 	return 0;
 }

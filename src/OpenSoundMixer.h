@@ -55,12 +55,28 @@ namespace osm
 	};
 
 	class Manager
+		: public IReference
 	{
 	protected:
 		Manager(){}
 		~Manager(){}
 	public:
 
+		virtual bool Initialize() = 0;
+
+		virtual void Finalize() = 0;
+
+		virtual Sound* CreateSound(void* data, int32_t size, bool isDecompressed) = 0;
+
+		virtual int32_t Play(Sound* sound) = 0;
+
+		virtual bool IsPlaying(int32_t id) = 0;
+
+		virtual void StopAll() = 0;
+
+		virtual void Stop(int32_t id) = 0;
+
+		static Manager* Create();
 	};
 
 	template <class T>

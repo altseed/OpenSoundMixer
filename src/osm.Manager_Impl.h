@@ -3,6 +3,7 @@
 
 #include "OpenSoundMixer.h"
 #include "OpenSoundMixerInternal.h"
+#include "osm.ReferenceObject.h"
 
 #include <mutex>
 #include <map>
@@ -14,6 +15,7 @@ namespace osm
 
 	class Manager_Impl
 		: public Manager
+		, public ReferenceObject
 	{
 	private:
 	
@@ -48,17 +50,26 @@ namespace osm
 		Manager_Impl();
 		virtual ~Manager_Impl();
 
-		bool Initialize();
-		void Finalize();
+		bool Initialize() override;
 
-		Sound* CreateSound(void* data, int32_t size, bool isDecompressed);
+		void Finalize() override;
 
-		int32_t Play( Sound* sound );
+		Sound* CreateSound(void* data, int32_t size, bool isDecompressed) override;
+
+		int32_t Play(Sound* sound) override;
 	
-		bool IsPlaying(int32_t id);
+		bool IsPlaying(int32_t id) override;
 
-		void StopAll();
+		void StopAll() override;
 
-		void Stop(int32_t id);
+		void Stop(int32_t id) override;
+
+		// IReferenceを継承したデバイスオブジェクト向け定義
+#if !SWIG
+	public:
+		virtual int GetRef() { return ReferenceObject::GetRef(); }
+		virtual int AddRef() { return ReferenceObject::AddRef(); }
+		virtual int Release() { return ReferenceObject::Release(); }
+#endif
 	};
 }

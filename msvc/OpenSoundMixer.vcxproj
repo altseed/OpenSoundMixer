@@ -83,6 +83,7 @@
     </ClCompile>
     <ClCompile Include="..\src\Manager\osm.Manager_Impl_XAudio2.cpp" />
     <ClCompile Include="..\src\osm.Decorder.cpp" />
+    <ClCompile Include="..\src\osm.Manager.cpp" />
     <ClCompile Include="..\src\osm.Manager_Impl.cpp" />
     <ClCompile Include="..\src\osm.ReferenceObject.cpp" />
     <ClCompile Include="..\src\osm.Sound_Impl.cpp" />

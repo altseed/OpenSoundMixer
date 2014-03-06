@@ -17,6 +17,7 @@
     <ClCompile Include="..\src\Manager\osm.Manager_Impl_PulseAudio.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\osm.Manager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\OpenSoundMixer.h" />

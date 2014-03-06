@@ -20,8 +20,8 @@ namespace osm
 			float v = s.second.Volume * s.second.FadeVolume;
 
 			int32_t rest = sampleCount;
-			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStart() * s.second.SoundPtr->GetSampleCount());
-			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEnd() * s.second.SoundPtr->GetSampleCount());
+			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStart() * 44100);
+			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEnd() * 44100);
 			auto enabledLoop = true;
 
 			if (loopEnd > s.second.SoundPtr->GetSampleCount()) loopEnd = s.second.SoundPtr->GetSampleCount();
@@ -248,6 +248,7 @@ namespace osm
 			auto s = m_soundStates.find(id);
 			if (s != m_soundStates.end())
 			{
+				s->second.FadeVolume = 0.0f;
 				s->second.FadeGradient = 1.0f / 44100.0f / second;
 			}
 		}

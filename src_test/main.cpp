@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 	printf("Loaded resources.\n");
 
 	auto id1 = manager->Play(streamSound);
+	manager->FadeIn(id1, 3);
 	::osm::Sleep(1000);
 	auto id2 = manager->Play(staticSound);
 	

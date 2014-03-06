@@ -52,6 +52,11 @@ namespace osm
 		Sound() {}
 		virtual ~Sound() {}
 	public:
+
+		virtual void SetLoopPoint(float loopStart, float loopEnd) = 0;
+
+		virtual float GetLength() = 0;
+
 	};
 
 	class Manager

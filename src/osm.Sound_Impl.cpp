@@ -9,8 +9,8 @@ namespace osm
 	Sound_Impl::Sound_Impl()
 		: m_isDecompressed(false)
 	{
-
-	
+		m_loopStart = 0.0f;
+		m_loopEnd = -1.0;
 	}
 
 	Sound_Impl::~Sound_Impl()
@@ -73,5 +73,16 @@ namespace osm
 		if (m_isDecompressed) return m_samples.size();
 
 		return m_decorder->GetSampleCount();
+	}
+
+	void Sound_Impl::SetLoopPoint(float loopStart, float loopEnd)
+	{
+		m_loopStart = loopStart;
+		m_loopEnd = loopEnd;
+	}
+
+	float Sound_Impl::GetLength()
+	{
+		return GetSampleCount() / 44100.0f;
 	}
 }

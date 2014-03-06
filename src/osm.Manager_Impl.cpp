@@ -19,34 +19,77 @@ namespace osm
 
 			float v = s.second.Volume * s.second.FadeVolume;
 
-			auto size = s.second.SoundPtr->GetSamples(m_tempSamples.data(), s.second.SamplePos, sampleCount);
-			for (int32_t i = 0; i < size; i++)
-			{
-				if (s.second.FadeGradient != 0.0f)
-				{
-					v = s.second.Volume * s.second.FadeVolume;
-					s.second.FadeVolume += s.second.FadeGradient;
-				
-					if (s.second.FadeGradient > 0 && s.second.FadeVolume >= 1.0f)
-					{
-						s.second.FadeGradient = 0;
-						s.second.Volume = 1.0f;
-					}
+			int32_t rest = sampleCount;
+			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStart() * s.second.SoundPtr->GetSampleCount());
+			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEnd() * s.second.SoundPtr->GetSampleCount());
+			auto enabledLoop = true;
 
-					if (s.second.FadeGradient < 0 && s.second.FadeVolume <= 0.0f)
+			if (loopEnd > s.second.SoundPtr->GetSampleCount()) loopEnd = s.second.SoundPtr->GetSampleCount();
+			if (loopStart == loopEnd) enabledLoop = false;
+			if (loopStart > loopEnd) enabledLoop = false;
+			if (loopEnd < 0) enabledLoop = false;
+
+			while (rest > 0)
+			{
+				int32_t readSize = sampleCount;
+
+				// loop
+				if (enabledLoop)
+				{
+					if (s.second.SamplePos + sampleCount >= loopEnd)
 					{
-						s.second.FadeGradient = 0;
-						s.second.Volume = 0.0f;
+						readSize = loopEnd - s.second.SamplePos;
 					}
 				}
 
-				auto l = (int32_t) samples[i].Left + (int32_t) (m_tempSamples[i].Left * v);
-				auto r = (int32_t) samples[i].Right + (int32_t) (m_tempSamples[i].Right * v);
+				auto size = s.second.SoundPtr->GetSamples(m_tempSamples.data(), s.second.SamplePos, readSize);
+				for (int32_t i = 0; i < size; i++)
+				{
+					if (s.second.FadeGradient != 0.0f)
+					{
+						v = s.second.Volume * s.second.FadeVolume;
+						s.second.FadeVolume += s.second.FadeGradient;
 
-				samples[i].Left = Clamp(l, 32767, -32768);
-				samples[i].Right = Clamp(r, 32767, -32768);
+						if (s.second.FadeGradient > 0 && s.second.FadeVolume >= 1.0f)
+						{
+							s.second.FadeGradient = 0;
+							s.second.Volume = 1.0f;
+						}
+
+						if (s.second.FadeGradient < 0 && s.second.FadeVolume <= 0.0f)
+						{
+							s.second.FadeGradient = 0;
+							s.second.Volume = 0.0f;
+						}
+					}
+
+					auto l = (int32_t) samples[i].Left + (int32_t) (m_tempSamples[i].Left * v);
+					auto r = (int32_t) samples[i].Right + (int32_t) (m_tempSamples[i].Right * v);
+
+					samples[i].Left = Clamp(l, 32767, -32768);
+					samples[i].Right = Clamp(r, 32767, -32768);
+				}
+				s.second.SamplePos +=size;
+
+				rest -= size;
+
+				// loop
+				if (enabledLoop)
+				{
+					if (s.second.SamplePos >= loopEnd)
+					{
+						s.second.SamplePos = loopStart;
+					}
+				}
+				else
+				{
+					if (s.second.SamplePos >= s.second.SoundPtr->GetSampleCount())
+					{
+						break;
+					}
+				}
 			}
-			s.second.SamplePos += sampleCount;
+			
 		}
 
 		// íœˆ—

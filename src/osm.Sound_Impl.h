@@ -20,6 +20,9 @@ namespace osm
 		std::vector<uint8_t>		m_data;
 		std::shared_ptr<Decorder>	m_decorder;
 	
+		float						m_loopStart;
+		float						m_loopEnd;
+
 	public:
 		Sound_Impl();
 		virtual ~Sound_Impl();
@@ -27,6 +30,13 @@ namespace osm
 		bool Load(void* data, int32_t size, bool isDecompressed);
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);
 		int32_t GetSampleCount();
+
+		void SetLoopPoint(float loopStart, float loopEnd) override;
+
+		float GetLength() override;
+
+		float GetLoopStart() { return m_loopStart; }
+		float GetLoopEnd() { return m_loopEnd; }
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

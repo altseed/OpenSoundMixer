@@ -34,7 +34,7 @@ set(pulse_audio_src
 	src/Manager/osm.Manager_Impl_PulseAudio.cpp)
 
 set(test_src
-	src/main.cpp)
+	src_test/main.cpp)
 
 if(WIN32)
 list(APPEND common_src
@@ -102,6 +102,9 @@ set_target_properties(osmtest PROPERTIES OUTPUT_NAME_RELEASE "OpenSoundMixerTest
 else()
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME "OpenSoundMixer" )
 set_target_properties(osmtest PROPERTIES OUTPUT_NAME "OpenSoundMixerTest" )
+
+set_target_properties(aceCommon PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "lib/" )
+set_target_properties(aceCommon PROPERTIES LIBRARY_OUTPUT_DIRECTORY "lib/" )
 endif()
 
 install(

@@ -1,16 +1,6 @@
 
 #include "osm.OggDecorder.h"
 
-#if _DEBUG
-#pragma comment(lib,"Debug/libogg_static.lib")
-#pragma comment(lib,"Debug/libvorbis_static.lib")
-#pragma comment(lib,"Debug/libvorbisfile_static.lib")
-#else
-#pragma comment(lib,"Release/libogg_static.lib")
-#pragma comment(lib,"Release/libvorbis_static.lib")
-#pragma comment(lib,"Release/libvorbisfile_static.lib")
-#endif
-
 #include <vorbis/vorbisfile.h>
 
 namespace osm

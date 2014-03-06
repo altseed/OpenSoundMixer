@@ -1,4 +1,17 @@
 
+#if _DEBUG
+#pragma comment(lib,"Debug/libogg_static.lib")
+#pragma comment(lib,"Debug/libvorbis_static.lib")
+#pragma comment(lib,"Debug/libvorbisfile_static.lib")
+#pragma comment(lib,"Debug/OpenSoundMixer.lib")
+#else
+#pragma comment(lib,"Release/libogg_static.lib")
+#pragma comment(lib,"Release/libvorbis_static.lib")
+#pragma comment(lib,"Release/libvorbisfile_static.lib")
+#pragma comment(lib,"Release/OpenSoundMixer.lib")
+#endif
+
+
 #if _WIN32
 #include "Manager/osm.Manager_Impl_XAudio2.h"
 #else

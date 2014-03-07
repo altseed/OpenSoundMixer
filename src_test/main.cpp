@@ -2,6 +2,12 @@
 #include <vector>
 #include <string>
 
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h>
+#endif
+
 #if _DEBUG
 #pragma comment(lib,"Debug/libogg_static.lib")
 #pragma comment(lib,"Debug/libvorbis_static.lib")
@@ -15,6 +21,39 @@
 #endif
 
 #include "OpenSoundMixer.h"
+
+#ifdef _WIN32
+inline void Sleep_(int32_t ms)
+{
+	::Sleep(ms);
+}
+#else
+inline void Sleep_(int32_t ms)
+{
+	usleep(1000 * ms);
+}
+#endif
+
+template <class T>
+void SafeAddRef(T& t)
+{
+	if (t != NULL)
+	{
+		t->AddRef();
+	}
+}
+
+template <class T>
+void SafeRelease(T& t)
+{
+	if (t != NULL)
+	{
+		t->Release();
+		t = NULL;
+	}
+}
+
+
 #if _WIN32
 #include <Windows.h>
 std::wstring ToWide(const char* pText);
@@ -92,12 +131,12 @@ int main(int argc, char **argv)
 
 	auto id1 = manager->Play(streamSound);
 	manager->FadeIn(id1, 3);
-	::osm::Sleep(1000);
+	Sleep_(1000);
 	auto id2 = manager->Play(staticSound);
 	
 	while (manager->IsPlaying(id1) || manager->IsPlaying(id2))
 	{
-		::osm::Sleep(1);
+		Sleep_(1);
 	}
 
 	manager->Finalize();

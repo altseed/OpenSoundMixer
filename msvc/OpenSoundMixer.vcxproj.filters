@@ -37,6 +37,7 @@
     <ClInclude Include="..\src\Manager\osm.Manager_Impl_PulseAudio.h">
       <Filter>Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\OpenSoundMixerInternal.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Decorder">

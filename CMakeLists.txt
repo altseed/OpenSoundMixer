@@ -53,9 +53,10 @@ list(APPEND test_src
 include_directories(
 	src/
 	)
-
 # 
+
 link_directories(${PROJECT_SOURCE_DIR}/lib/)
+link_directories(${PROJECT_BINARY_DIR}/lib/)
 
 # ÉRÉìÉpÉCÉãêÊÇí«â¡
 add_executable( osmtest ${test_src} )
@@ -108,8 +109,8 @@ else()
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME "OpenSoundMixer" )
 set_target_properties(osmtest PROPERTIES OUTPUT_NAME "OpenSoundMixerTest" )
 
-set_target_properties(osmlib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "../lib/" )
-set_target_properties(osmlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY "../lib/" )
+set_target_properties(osmlib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "lib/" )
+set_target_properties(osmlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY "lib/" )
 endif()
 
 install(

@@ -8,7 +8,10 @@ http://soundeffect-lab.info/
 
 LinuxでのコンパイルにはPulseAudioのヘッダーファイルを必要とします。
 
--Ubuntu
-apt-get install libpulse-dev
-apt-get install libvorbis-dev
+* Windows
+- Xaudio2
+
+* Ubuntu
+- apt-get install libpulse-dev
+- apt-get install libvorbis-dev
 

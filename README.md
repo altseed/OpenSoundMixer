@@ -1,12 +1,12 @@
-OpenSoundMixer
+﻿OpenSoundMixer
 ==============
-�}���`�v���b�g�t�H�[���ȃT�E���h�~�L�T�[�ł��B
+マルチプラットフォームなサウンドミキサーです。
 
-�e�X�g�Ɏg�p���Ă��鉹��
+テストに使用している音は
 http://soundeffect-lab.info/
-���炨�؂肵�Ă���܂��B
+からお借りしております。
 
-Linux�ł̃R���p�C���ɂ�PulseAudio�̃w�b�_�[�t�@�C����K�v�Ƃ��܂��B
+LinuxでのコンパイルにはPulseAudioのヘッダーファイルを必要とします。
 
 * Windows
 - Xaudio2

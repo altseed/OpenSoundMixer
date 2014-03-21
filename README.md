@@ -14,4 +14,4 @@ LinuxでのコンパイルにはPulseAudioのヘッダーファイルを必要�
 ## Ubuntu
 - apt-get install libpulse-dev
 - apt-get install libvorbis-dev
-
+- apt-get install libogg-dev

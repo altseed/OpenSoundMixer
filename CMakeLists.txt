@@ -40,6 +40,9 @@ set(test_src
 if(WIN32)
 list(APPEND common_src
 	${xaudio2_src})
+
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
 else()
 list(APPEND common_src
 	${pulse_audio_src})
@@ -70,8 +73,12 @@ else()
 	list(APPEND common_lib vorbisfile )
 	list(APPEND common_lib OpenSoundMixer )
 
-	FIND_PACKAGE(PulseAudio REQUIRED)
-	list(APPEND osmtest ${PulseAudio_LIBRARY})
+	if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+	else()
+		FIND_PACKAGE(PulseAudio REQUIRED)
+		list(APPEND osmtest ${PulseAudio_LIBRARY})
+	endif()
 
 	find_package(Threads REQUIRED)
 	list(APPEND common_lib ${CMAKE_THREAD_LIBS_INIT})

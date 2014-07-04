@@ -1,24 +1,24 @@
-ï»¿# Debug Releaseã«é™å®š
+# Debug Release‚ÉŒÀ’è
 set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 
-# ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå
+# ƒvƒƒWƒFƒNƒg–¼
 project(OpenSoundMixer)
 
-# CMake ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãƒã‚§ãƒƒã‚¯
+# CMake ƒo[ƒWƒ‡ƒ“ƒ`ƒFƒbƒN
 if (MSVC)
 cmake_minimum_required(VERSION 2.8.11)
 else()
 cmake_minimum_required(VERSION 2.8)
 endif()
 
-# ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«è¨­å®š
+# ƒRƒ“ƒpƒCƒ‹İ’è
 if (MSVC)
-	# ç‰¹ã«ä½•ã‚‚
+	# “Á‚É‰½‚à
 else()
 	set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC" ${CMAKE_CXX_FLAGS})
 endif()
 
-# ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰è¨­å®š
+# ƒ\[ƒXƒR[ƒhİ’è
 set(common_src
 	src/osm.Decorder.cpp
 	src/osm.Manager.cpp
@@ -52,7 +52,7 @@ list(APPEND test_src
 	${common_src})
 
 
-# ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã®è¨­å®š
+# ƒCƒ“ƒNƒ‹[ƒh‚Ìİ’è
 include_directories(
 	src/
 	)
@@ -61,7 +61,7 @@ include_directories(
 link_directories(${PROJECT_SOURCE_DIR}/lib/)
 link_directories(${PROJECT_BINARY_DIR}/lib/)
 
-# ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«å…ˆã‚’è¿½åŠ 
+# ƒRƒ“ƒpƒCƒ‹æ‚ğ’Ç‰Á
 add_executable( osmtest ${test_src} )
 add_library( osmlib STATIC ${common_src} )
 
@@ -86,7 +86,7 @@ endif()
 
 target_link_libraries(osmtest ${common_lib}) 
 
-# ãƒ•ãƒ©ã‚°å‡¦ç†
+# ƒtƒ‰ƒOˆ—
 if (MSVC)
 	if (NOT USE_MSVC_RUNTIME_LIBRARY_DLL)
 		foreach (flag CMAKE_C_FLAGS
@@ -106,7 +106,7 @@ if (MSVC)
 	endif()
 endif()
 
-# å‡ºåŠ›å…ˆã®è¨­å®š
+# o—Íæ‚Ìİ’è
 if (MSVC)
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME_DEBUG "OpenSoundMixer" )
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME_RELEASE "OpenSoundMixer" )

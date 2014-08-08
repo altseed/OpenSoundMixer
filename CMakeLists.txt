@@ -34,15 +34,21 @@ set(xaudio2_src
 set(pulse_audio_src
 	src/Manager/osm.Manager_Impl_PulseAudio.cpp)
 
+set(open_al_src
+	src/Manager/osm.Manager_Impl_OpenAL.cpp)
+
 set(test_src
 	src_test/main.cpp)
 
 if(WIN32)
-list(APPEND common_src
-	${xaudio2_src})
+	list(APPEND common_src
+		${xaudio2_src})
+elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	list(APPEND common_src
+		${open_al_src})
 else()
-list(APPEND common_src
-	${pulse_audio_src})
+	list(APPEND common_src
+		${pulse_audio_src})
 endif()
 
 list(APPEND test_src
@@ -70,8 +76,14 @@ else()
 	list(APPEND common_lib vorbisfile )
 	list(APPEND common_lib OpenSoundMixer )
 
-	FIND_PACKAGE(PulseAudio REQUIRED)
-	list(APPEND osmtest ${PulseAudio_LIBRARY})
+	if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+		FIND_PACKAGE(OpenAL REQUIRED)
+		list(APPEND osmtest ${OpenAL_LIBRARY})
+		target_link_libraries(osmtest "-framework OpenAL")
+	else()
+		FIND_PACKAGE(PulseAudio REQUIRED)
+		list(APPEND osmtest ${PulseAudio_LIBRARY})
+	endif()
 
 	find_package(Threads REQUIRED)
 	list(APPEND common_lib ${CMAKE_THREAD_LIBS_INIT})

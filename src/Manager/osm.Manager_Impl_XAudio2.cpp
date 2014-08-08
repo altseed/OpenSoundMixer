@@ -56,6 +56,10 @@ namespace osm
 
 				this_->m_sourceVoice->SubmitSourceBuffer(&xbuf);
 			}
+			else
+			{
+				Sleep(1);
+			}
 		}
 
 		// I‚í‚è‚Ü‚Å‘Ò‚Â

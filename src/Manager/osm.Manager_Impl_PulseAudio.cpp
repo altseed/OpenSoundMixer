@@ -44,7 +44,9 @@ namespace osm
 			this_->CALL_FUNCPTR_MV(pa_mainloop_iterate)(this_->m_mainLoop,0,NULL);
 		};
 	
-		Sample bufs[44100 / 4];
+		const int32_t bufferDivision = 100;
+
+		Sample bufs[44100 / bufferDivision];
 
 		while (this_->m_threading && !hasError)
 		{
@@ -59,7 +61,7 @@ namespace osm
 					continue;
 				}
 	
-				if( writableSize > 44100 / 4 * sizeof(Sample) ) writableSize = 44100 / 4 * sizeof(Sample);
+				if (writableSize > 44100 / bufferDivision * sizeof(Sample)) writableSize = 44100 / bufferDivision * sizeof(Sample);
 
 				this_->ReadSamples(bufs, writableSize / sizeof(Sample) );
 				this_->CALL_FUNCPTR_MV(pa_stream_write)(

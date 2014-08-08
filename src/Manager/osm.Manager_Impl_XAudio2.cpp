@@ -35,7 +35,9 @@ namespace osm
 	{
 		Manager_Impl_XAudio2* this_ = (Manager_Impl_XAudio2*) p;
 
-		Sample bufs[4][44100 / 4];
+		const int32_t bufferDivision = 100;
+
+		Sample bufs[4][44100 / bufferDivision];
 		int32_t targetBuf = 0;
 
 		int32_t current = 0;
@@ -46,10 +48,10 @@ namespace osm
 			this_->m_sourceVoice->GetState(&state);
 			if (state.BuffersQueued < 2)
 			{
-				this_->ReadSamples(bufs[targetBuf], 44100 / 4);
+				this_->ReadSamples(bufs[targetBuf], 44100 / bufferDivision);
 
 				XAUDIO2_BUFFER xbuf = { 0 };
-				xbuf.AudioBytes = 44100 / 4 * sizeof(Sample);
+				xbuf.AudioBytes = 44100 / bufferDivision * sizeof(Sample);
 				xbuf.pAudioData = (uint8_t*) bufs[targetBuf];
 				xbuf.Flags = XAUDIO2_END_OF_STREAM;
 				targetBuf = (targetBuf + 1) % 4;

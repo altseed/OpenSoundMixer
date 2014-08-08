@@ -53,6 +53,11 @@ namespace osm
 			m_isDecompressed = false;
 		}
 
+		if (m_loopEnd == -1.0f)
+		{
+			m_loopEnd = GetLength();
+		}
+
 		return true;
 	}
 
@@ -68,20 +73,14 @@ namespace osm
 		return m_decorder->GetSamples(samples, offset, count);
 	}
 
-	int32_t Sound_Impl::GetSampleCount()
+	int32_t Sound_Impl::GetSampleCount() const
 	{
 		if (m_isDecompressed) return m_samples.size();
 
 		return m_decorder->GetSampleCount();
 	}
 
-	void Sound_Impl::SetLoopPoint(float loopStart, float loopEnd)
-	{
-		m_loopStart = loopStart;
-		m_loopEnd = loopEnd;
-	}
-
-	float Sound_Impl::GetLength()
+	float Sound_Impl::GetLength() const
 	{
 		return GetSampleCount() / 44100.0f;
 	}

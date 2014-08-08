@@ -45,10 +45,19 @@ namespace osm
 		virtual ~Sound() {}
 	public:
 
-		virtual void SetLoopPoint(float loopStart, float loopEnd) = 0;
+		virtual float GetLoopStartingPoint() const = 0;
 
-		virtual float GetLength() = 0;
+		virtual void SetLoopStartingPoint(float startingPoint) = 0;
 
+		virtual float GetLoopEndPoint() const = 0;
+
+		virtual void SetLoopEndPoint(float endPoint) = 0;
+
+		virtual bool GetIsLoopingMode() const = 0;
+
+		virtual void SetIsLoopingMode(bool isLoopingMode) = 0;
+
+		virtual float GetLength() const = 0;
 	};
 
 	class Manager

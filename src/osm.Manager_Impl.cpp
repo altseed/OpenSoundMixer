@@ -20,9 +20,9 @@ namespace osm
 			float v = s.second.Volume * s.second.FadeVolume;
 
 			int32_t rest = sampleCount;
-			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStart() * 44100);
-			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEnd() * 44100);
-			auto enabledLoop = true;
+			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStartingPoint() * 44100);
+			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEndPoint() * 44100);
+			auto enabledLoop = s.second.SoundPtr->GetIsLoopingMode();
 
 			if (loopEnd > s.second.SoundPtr->GetSampleCount()) loopEnd = s.second.SoundPtr->GetSampleCount();
 			if (loopStart == loopEnd) enabledLoop = false;

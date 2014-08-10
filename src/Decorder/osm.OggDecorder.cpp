@@ -159,7 +159,8 @@ namespace osm
 		auto maxReadSize = 4096;
 		if (count < maxReadSize)
 		{
-			maxReadSize = ((count + 1) / 2) * 2;
+			maxReadSize = count * 2;
+			if (maxReadSize > 4096) maxReadSize = 4096;
 		}
 
 		while (m_original.CurrentSample + m_original.Samples.size() / sampleSize <= sampleEnd_i)

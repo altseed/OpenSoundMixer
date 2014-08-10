@@ -139,6 +139,19 @@ int main(int argc, char **argv)
 		Sleep_(1);
 	}
 
+	/*
+	int32_t time = 0;
+	while (true)
+	{
+		if (time % 500 == 0)
+		{
+			manager->Play(streamSound);
+		}
+		Sleep_(1);
+		time++;
+	}
+	*/
+
 	manager->Finalize();
 	staticSound->Release();
 	streamSound->Release();

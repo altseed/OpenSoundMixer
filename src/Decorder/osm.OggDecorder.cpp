@@ -148,11 +148,18 @@ namespace osm
 
 		int32_t sampleSize = 2 * m_original.ChannelCount;
 
-		if (m_original.CurrentSample > sampleStart_i)
+		// 巻き戻しor大幅スキップ
+		if (m_original.CurrentSample > sampleStart_i || sampleStart_i - m_original.CurrentSample > 44100 / 5)
 		{
 			m_original.Samples.clear();
 			ov_pcm_seek(&m_ovf, sampleStart_i);
 			m_original.CurrentSample = sampleStart_i;
+		}
+
+		auto maxReadSize = 4096;
+		if (count < maxReadSize)
+		{
+			maxReadSize = ((count + 1) / 2) * 2;
 		}
 
 		while (m_original.CurrentSample + m_original.Samples.size() / sampleSize <= sampleEnd_i)
@@ -164,18 +171,17 @@ namespace osm
 			readSize = ov_read(
 				&m_ovf,
 				(char*)buffer,
-				4096,
+				maxReadSize,
 				0,
 				2,
 				1,
 				&bitstream
 				);
 
-			for (auto i = 0; i < readSize; i++)
-			{
-				m_original.Samples.push_back(buffer[i]);
-			}
-
+			m_original.Samples.resize(m_original.Samples.size() + readSize);
+			auto dst = m_original.Samples.data() + (m_original.Samples.size() - readSize);
+			memcpy(dst, buffer, readSize);
+			
 			// 末尾？
 			if (m_original.CurrentSample + m_original.Samples.size() / sampleSize == m_original.TotalSample) break;
 		}

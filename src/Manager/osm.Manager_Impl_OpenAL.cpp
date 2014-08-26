@@ -27,6 +27,7 @@ namespace osm
 		if (m_source)
 		{
 			alDeleteSources(1, &m_source);
+			m_source = 0;
 		}
 
 		alcMakeContextCurrent(NULL);
@@ -34,11 +35,13 @@ namespace osm
 		if (m_context != nullptr)
 		{
 			alcDestroyContext(m_context);
+			m_context = nullptr;
 		}
 
 		if (m_device != nullptr)
 		{
 			alcCloseDevice(m_device);
+			m_device = nullptr;
 		}
 	}
 

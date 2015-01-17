@@ -19,6 +19,9 @@ namespace osm
 
 	bool Sound_Impl::Load(void* data, int32_t size, bool isDecompressed)
 	{
+		if (data == nullptr) return false;
+		if (size <= 0) return false;
+
 		m_data.resize(size);
 		memcpy(m_data.data(), data, size);
 

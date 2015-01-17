@@ -229,6 +229,8 @@ namespace osm
 
 	void Manager_Impl::SetVolume(int32_t id, float volume)
 	{
+		if (volume < 0.0f) volume = 0.0f;
+
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		{
@@ -249,20 +251,37 @@ namespace osm
 			if (s != m_soundStates.end())
 			{
 				s->second.FadeVolume = 0.0f;
-				s->second.FadeGradient = 1.0f / 44100.0f / second;
+
+				if (second < 0.0f)
+				{
+					s->second.FadeGradient = FLT_MAX;
+				}
+				else
+				{
+					s->second.FadeGradient = 1.0f / 44100.0f / second;
+				}
 			}
 		}
 	}
 
 	void Manager_Impl::FadeOut(int32_t id, float second)
 	{
+		if (second < 0.0f) return;
+
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		{
 			auto s = m_soundStates.find(id);
 			if (s != m_soundStates.end())
 			{
-				s->second.FadeGradient = - 1.0f / 44100.0f / second;
+				if (second < 0.0f)
+				{
+					s->second.FadeGradient = -FLT_MAX;
+				}
+				else
+				{
+					s->second.FadeGradient = -1.0f / 44100.0f / second;
+				}
 			}
 		}
 	}

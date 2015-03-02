@@ -207,7 +207,7 @@ namespace osm
 				if (fmt.FormatID == 1)
 				{
 					// PCM�̏ꍇ
-					auto pcm = new PCM(m_data.data(), m_data.size(), 2, fmt.SamplesPerSec, fmt.BitsPerSample);
+					auto pcm = new PCM(m_data.data(), m_data.size(), fmt.ChannelCount, fmt.SamplesPerSec, fmt.BitsPerSample);
 					m_pcm = std::shared_ptr<PCM>(pcm);
 				}
 			}

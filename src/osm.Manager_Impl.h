@@ -8,6 +8,7 @@
 #include <mutex>
 #include <map>
 #include <vector>
+#include <float.h>
 
 namespace osm
 {

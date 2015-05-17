@@ -29,7 +29,7 @@ namespace osm
 
 			float			FadeGradient;
 			float			FadeVolume;
-
+			float			TargetedFadeVolume;
 		};
 
 		int32_t	m_stateID;
@@ -80,6 +80,8 @@ namespace osm
 		void FadeIn(int32_t id, float second) override;
 
 		void FadeOut(int32_t id, float second) override;
+
+		void Fade(int32_t id, float second, float targetedVolume) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

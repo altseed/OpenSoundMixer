@@ -50,16 +50,16 @@ namespace osm
 						v = s.second.Volume * s.second.FadeVolume;
 						s.second.FadeVolume += s.second.FadeGradient;
 
-						if (s.second.FadeGradient > 0 && s.second.FadeVolume >= 1.0f)
+						if (s.second.FadeGradient > 0 && s.second.FadeVolume >= s.second.TargetedFadeVolume)
 						{
 							s.second.FadeGradient = 0;
-							s.second.Volume = 1.0f;
+							s.second.FadeVolume = s.second.TargetedFadeVolume;
 						}
 
-						if (s.second.FadeGradient < 0 && s.second.FadeVolume <= 0.0f)
+						if (s.second.FadeGradient < 0 && s.second.FadeVolume <= s.second.TargetedFadeVolume)
 						{
 							s.second.FadeGradient = 0;
-							s.second.Volume = 0.0f;
+							s.second.FadeVolume = s.second.TargetedFadeVolume;
 						}
 					}
 
@@ -244,43 +244,44 @@ namespace osm
 
 	void Manager_Impl::FadeIn(int32_t id, float second)
 	{
-		std::lock_guard<std::recursive_mutex> lock(GetMutex());
-
-		{
-			auto s = m_soundStates.find(id);
-			if (s != m_soundStates.end())
-			{
-				s->second.FadeVolume = 0.0f;
-
-				if (second < 0.0f)
-				{
-					s->second.FadeGradient = FLT_MAX;
-				}
-				else
-				{
-					s->second.FadeGradient = 1.0f / 44100.0f / second;
-				}
-			}
-		}
+		Fade(id, second, 1.0f);
 	}
 
 	void Manager_Impl::FadeOut(int32_t id, float second)
 	{
-		if (second < 0.0f) return;
+		Fade(id, second, 0.0f);
+	}
 
+	void Manager_Impl::Fade(int32_t id, float second, float targetedVolume)
+	{
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		{
 			auto s = m_soundStates.find(id);
 			if (s != m_soundStates.end())
 			{
-				if (second < 0.0f)
+				auto diff = targetedVolume - s->second.FadeVolume;
+
+				s->second.TargetedFadeVolume = targetedVolume;
+
+				if (diff == 0.0f)
 				{
-					s->second.FadeGradient = -FLT_MAX;
+					s->second.FadeGradient = 0.0f;
+				}
+				else if (second <= 0.0f)
+				{
+					if (diff > 0.0f)
+					{
+						s->second.FadeGradient = 10.0f;
+					}
+					else
+					{
+						s->second.FadeGradient = -10.0f;
+					}
 				}
 				else
 				{
-					s->second.FadeGradient = -1.0f / 44100.0f / second;
+					s->second.FadeGradient = (diff) / 44100.0f / second;
 				}
 			}
 		}

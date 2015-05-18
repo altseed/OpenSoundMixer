@@ -57,6 +57,7 @@ list(APPEND test_src
 
 # インクルードの設定
 include_directories(
+	include/
 	src/
 	)
 # 

@@ -62,8 +62,10 @@ include_directories(
 	)
 # 
 
-link_directories(${PROJECT_SOURCE_DIR}/lib/)
-link_directories(${PROJECT_BINARY_DIR}/lib/)
+link_directories(
+	${PROJECT_SOURCE_DIR}/lib/
+	${PROJECT_BINARY_DIR}/lib/
+	lib/)
 
 # ƒRƒ“ƒpƒCƒ‹æ‚ğ’Ç‰Á
 add_executable( osmtest ${test_src} )

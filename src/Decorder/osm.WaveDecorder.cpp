@@ -211,8 +211,26 @@ namespace osm
 					m_pcm = std::shared_ptr<PCM>(pcm);
 				}
 			}
+			else if (STRICMP("JUNK", chunk) == 0)
+			{
+				// チャンクサイズ
+				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+
+				// 不明
+				offset += chunkSize;
+			}
 			else
 			{
+				// 末尾にゴミデータをつけている場合があるのでスキップ
+				if (m_pcm != nullptr)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+
 				// チャンクサイズ
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 

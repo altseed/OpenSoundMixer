@@ -13,6 +13,7 @@
 namespace osm
 {
 	class Sound_Impl;
+	class Resampler;
 
 	class Manager_Impl
 		: public Manager
@@ -30,6 +31,8 @@ namespace osm
 			float			FadeGradient;
 			float			FadeVolume;
 			float			TargetedFadeVolume;
+
+			std::shared_ptr<Resampler> ResamplerPtr;
 		};
 
 		int32_t	m_stateID;

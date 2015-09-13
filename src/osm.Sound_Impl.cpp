@@ -89,38 +89,23 @@ namespace osm
 		return GetSampleCount() / 44100.0f;
 	}
 
-	bool Sound_Impl::GetIsPlaySpeedMode() const
+	bool Sound_Impl::GetPlaybackSpeedEnabled() const
 	{
-		return (m_resampler) ? true : false;
+		return m_playbackSpeedEnabled;
 	}
 
-	void Sound_Impl::SetIsPlaySpeedMode(bool isPlaySeedMode)
+	void Sound_Impl::SetPlaybackSpeedEnabled(bool playbackSpeedEnabled)
 	{
-		if (!isPlaySeedMode)
-			m_resampler.reset();
-		else if (!m_resampler)
-			m_resampler = std::make_shared<Resampler>();
+		m_playbackSpeedEnabled = playbackSpeedEnabled;
 	}
 
-	float Sound_Impl::GetPlaySpeed() const
+	float Sound_Impl::GetPlaybackSpeed() const
 	{
-		if (!m_resampler)
-			return 1.0;
-		double ratio = m_resampler->GetResampleRatio();
-		return 1.0/ratio;
+		return m_playbackSpeed;
 	}
 
-	void Sound_Impl::SetPlaySpeed(float playSpeed)
+	void Sound_Impl::SetPlaybackSpeed(float playbackSpeed)
 	{
-		if (!m_resampler)
-			return;
-		m_resampler->SetResampleRatio(1.0/playSpeed);
-	}
-
-	Resampler *Sound_Impl::GetResampler()
-	{
-		if (m_resampler)
-			return &*m_resampler;
-		return nullptr;
+		m_playbackSpeed = playbackSpeed;
 	}
 }

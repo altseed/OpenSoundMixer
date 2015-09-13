@@ -22,10 +22,21 @@ namespace osm
 			if (s.second.IsPaused) continue;
 
 			int32_t inCount = sampleCount;
-			auto resampler = s.second.SoundPtr->GetResampler();
+
+			Resampler *resampler = nullptr;
+			if (s.second.SoundPtr->GetPlaybackSpeedEnabled())
+			{
+				if (!s.second.ResamplerPtr) {
+					s.second.ResamplerPtr = std::make_shared<Resampler>();
+				}
+				resampler = &*s.second.ResamplerPtr;
+			}
+
 			if (resampler)
 			{
-				double ratio = resampler->GetResampleRatio();
+				double playbackSpeed = s.second.SoundPtr->GetPlaybackSpeed();
+				double ratio = 1.0 / playbackSpeed;
+				resampler->SetResampleRatio(ratio);
 				int32_t exceedance = resampler->GetInputExceedance();
 				inCount = std::min(tempBufferLen, (int32_t)ceil(sampleCount / ratio) + 1) - (exceedance / 16);
 			}

@@ -26,7 +26,8 @@ namespace osm
 		float						m_loopEnd;
 		bool						isLoopMode = false;
 
-		std::shared_ptr<Resampler>	m_resampler;
+		bool						m_playbackSpeedEnabled = false;
+		float						m_playbackSpeed = 0.0;
 
 	public:
 		Sound_Impl();
@@ -50,15 +51,13 @@ namespace osm
 
 		float GetLength() const override;
 
-		bool GetIsPlaySpeedMode() const override;
+		bool GetPlaybackSpeedEnabled() const override;
 
-		void SetIsPlaySpeedMode(bool isPlaySeedMode) override;
+		void SetPlaybackSpeedEnabled(bool playbackSpeedEnabled) override;
 
-		float GetPlaySpeed() const override;
+		float GetPlaybackSpeed() const override;
 
-		void SetPlaySpeed(float playSpeed) override;
-
-		Resampler *GetResampler();
+		void SetPlaybackSpeed(float playbackSpeed) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

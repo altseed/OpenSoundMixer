@@ -59,13 +59,13 @@ namespace osm
 
 		virtual float GetLength() const = 0;
 
-		virtual bool GetIsPlaySpeedMode() const = 0;
+		virtual bool GetPlaybackSpeedEnabled() const = 0;
 
-		virtual void SetIsPlaySpeedMode(bool isPlaySeedMode) = 0;
+		virtual void SetPlaybackSpeedEnabled(bool playSpeedEnabled) = 0;
 
-		virtual float GetPlaySpeed() const = 0;
+		virtual float GetPlaybackSpeed() const = 0;
 
-		virtual void SetPlaySpeed(float playSpeed) = 0;
+		virtual void SetPlaybackSpeed(float playbackSpeed) = 0;
 	};
 
 	class Manager

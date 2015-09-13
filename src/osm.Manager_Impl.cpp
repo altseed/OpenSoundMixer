@@ -33,12 +33,12 @@ namespace osm
 
 			while (rest > 0)
 			{
-				int32_t readSize = sampleCount;
+				int32_t readSize = rest;
 
 				// loop
 				if (enabledLoop)
 				{
-					if (s.second.SamplePos + sampleCount >= loopEnd)
+					if (s.second.SamplePos + rest >= loopEnd)
 					{
 						readSize = loopEnd - s.second.SamplePos;
 					}

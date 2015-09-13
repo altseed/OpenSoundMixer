@@ -89,14 +89,14 @@ namespace osm
 		return GetSampleCount() / 44100.0f;
 	}
 
-	bool Sound_Impl::GetPlaybackSpeedEnabled() const
+	bool Sound_Impl::GetIsPlaybackSpeedEnabled() const
 	{
-		return m_playbackSpeedEnabled;
+		return m_isPlaybackSpeedEnabled;
 	}
 
-	void Sound_Impl::SetPlaybackSpeedEnabled(bool playbackSpeedEnabled)
+	void Sound_Impl::SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled)
 	{
-		m_playbackSpeedEnabled = playbackSpeedEnabled;
+		m_isPlaybackSpeedEnabled = isPlaybackSpeedEnabled;
 	}
 
 	float Sound_Impl::GetPlaybackSpeed() const

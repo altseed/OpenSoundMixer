@@ -24,7 +24,7 @@ namespace osm
 			int32_t inCount = sampleCount;
 
 			Resampler *resampler = nullptr;
-			if (s.second.SoundPtr->GetPlaybackSpeedEnabled())
+			if (s.second.SoundPtr->GetIsPlaybackSpeedEnabled())
 			{
 				if (!s.second.ResamplerPtr) {
 					s.second.ResamplerPtr = std::make_shared<Resampler>();

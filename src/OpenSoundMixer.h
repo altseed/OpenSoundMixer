@@ -59,9 +59,9 @@ namespace osm
 
 		virtual float GetLength() const = 0;
 
-		virtual bool GetPlaybackSpeedEnabled() const = 0;
+		virtual bool GetIsPlaybackSpeedEnabled() const = 0;
 
-		virtual void SetPlaybackSpeedEnabled(bool playSpeedEnabled) = 0;
+		virtual void SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled) = 0;
 
 		virtual float GetPlaybackSpeed() const = 0;
 

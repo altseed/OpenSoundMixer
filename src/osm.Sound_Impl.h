@@ -26,7 +26,7 @@ namespace osm
 		float						m_loopEnd;
 		bool						isLoopMode = false;
 
-		bool						m_playbackSpeedEnabled = false;
+		bool						m_isPlaybackSpeedEnabled = false;
 		float						m_playbackSpeed = 0.0;
 
 	public:
@@ -51,9 +51,9 @@ namespace osm
 
 		float GetLength() const override;
 
-		bool GetPlaybackSpeedEnabled() const override;
+		bool GetIsPlaybackSpeedEnabled() const override;
 
-		void SetPlaybackSpeedEnabled(bool playbackSpeedEnabled) override;
+		void SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled) override;
 
 		float GetPlaybackSpeed() const override;
 

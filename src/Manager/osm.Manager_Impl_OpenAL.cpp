@@ -6,9 +6,10 @@ namespace osm
 	static const ALenum format = AL_FORMAT_STEREO16;
 	static const ALsizei freq  = 44100;
 
-	static const size_t queueSize   = 4;
-	static const size_t bufferSize  = freq / queueSize;
-	static const size_t bufferBytes = sizeof(Sample) * bufferSize;
+	static const size_t queueSize      = 4;
+	static const size_t bufferDivision = 100;
+	static const size_t bufferSize     = freq / bufferDivision;
+	static const size_t bufferBytes    = sizeof(Sample) * bufferSize;
 
 	void Manager_Impl_OpenAL::Reset()
 	{
@@ -57,9 +58,10 @@ namespace osm
 			alGetSourceiv(m_source, AL_BUFFERS_QUEUED, &queue);
 			if (!queue) {
 				for (auto b : m_buffers) {
-					ReadSamples(bufs[targetBuf], bufferSize);
+					auto sampleCount = ReadSamples(bufs[targetBuf], bufferSize);
+					auto sampleBytes = sampleCount * sizeof(Sample);
 
-					alBufferData(b, format, bufs[targetBuf], bufferBytes, freq);
+					alBufferData(b, format, bufs[targetBuf], sampleBytes, freq);
 					alSourceQueueBuffers(m_source, 1, &b);
 					targetBuf = (targetBuf + 1) % 4;
 				}
@@ -81,9 +83,10 @@ namespace osm
 				ALuint unqueued;
 				alSourceUnqueueBuffers(m_source, 1, &unqueued);
 
-				ReadSamples(bufs[targetBuf], bufferSize);
+				auto sampleCount = ReadSamples(bufs[targetBuf], bufferSize);
+				auto sampleBytes = sampleCount * sizeof(Sample);
 
-				alBufferData(unqueued, format, bufs[targetBuf], bufferBytes, freq);
+				alBufferData(unqueued, format, bufs[targetBuf], sampleBytes, freq);
 				alSourceQueueBuffers(m_source, 1, &unqueued);
 				targetBuf = (targetBuf + 1) % 4;
 				--processed;

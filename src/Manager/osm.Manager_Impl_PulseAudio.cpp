@@ -63,11 +63,12 @@ namespace osm
 	
 				if (writableSize > 44100 / bufferDivision * sizeof(Sample)) writableSize = 44100 / bufferDivision * sizeof(Sample);
 
-				this_->ReadSamples(bufs, writableSize / sizeof(Sample) );
+				auto sampleCount = this_->ReadSamples(bufs, writableSize / sizeof(Sample) );
+				auto sampleBytes = sampleCount * sizeof(Sample);
 				this_->CALL_FUNCPTR_MV(pa_stream_write)(
 					this_->m_stream,
 					bufs,
-					writableSize,
+					sampleBytes,
 					NULL,
 					0,
 					PA_SEEK_RELATIVE);

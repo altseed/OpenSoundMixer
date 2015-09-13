@@ -58,6 +58,14 @@ namespace osm
 		virtual void SetIsLoopingMode(bool isLoopingMode) = 0;
 
 		virtual float GetLength() const = 0;
+
+		virtual bool GetIsPlaySpeedMode() const = 0;
+
+		virtual void SetIsPlaySpeedMode(bool isPlaySeedMode) = 0;
+
+		virtual float GetPlaySpeed() const = 0;
+
+		virtual void SetPlaySpeed(float playSpeed) = 0;
 	};
 
 	class Manager

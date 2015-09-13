@@ -48,10 +48,11 @@ namespace osm
 			this_->m_sourceVoice->GetState(&state);
 			if (state.BuffersQueued < 2)
 			{
-				this_->ReadSamples(bufs[targetBuf], 44100 / bufferDivision);
+				auto sampleCount = this_->ReadSamples(bufs[targetBuf], 44100 / bufferDivision);
+				auto sampleBytes = sampleCount * sizeof(Sample);
 
 				XAUDIO2_BUFFER xbuf = { 0 };
-				xbuf.AudioBytes = 44100 / bufferDivision * sizeof(Sample);
+				xbuf.AudioBytes = sampleBytes;
 				xbuf.pAudioData = (uint8_t*) bufs[targetBuf];
 				xbuf.Flags = XAUDIO2_END_OF_STREAM;
 				targetBuf = (targetBuf + 1) % 4;

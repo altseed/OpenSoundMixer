@@ -26,7 +26,9 @@ set(common_src
 	src/osm.ReferenceObject.cpp
 	src/osm.Sound_Impl.cpp
 	src/Decorder/osm.OggDecorder.cpp
-	src/Decorder/osm.WaveDecorder.cpp)
+	src/Decorder/osm.WaveDecorder.cpp
+	src/Filter/osm.Resampler.cpp
+	)
 
 set(xaudio2_src
 	src/Manager/osm.Manager_Impl_XAudio2.cpp)

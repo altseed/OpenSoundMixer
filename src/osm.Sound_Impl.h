@@ -7,6 +7,8 @@
 #include "osm.Decorder.h"
 #include "osm.ReferenceObject.h"
 
+#include "Filter/osm.Resampler.h"
+
 namespace osm
 {
 	class Sound_Impl
@@ -23,6 +25,8 @@ namespace osm
 		float						m_loopStart;
 		float						m_loopEnd;
 		bool						isLoopMode = false;
+
+		std::shared_ptr<Resampler>	m_resampler;
 
 	public:
 		Sound_Impl();
@@ -45,6 +49,16 @@ namespace osm
 		void SetIsLoopingMode(bool isLoopingMode) { isLoopMode = isLoopingMode; }
 
 		float GetLength() const override;
+
+		bool GetIsPlaySpeedMode() const override;
+
+		void SetIsPlaySpeedMode(bool isPlaySeedMode) override;
+
+		float GetPlaySpeed() const override;
+
+		void SetPlaySpeed(float playSpeed) override;
+
+		Resampler *GetResampler();
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

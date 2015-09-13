@@ -20,6 +20,8 @@ namespace osm
 			float v = s.second.Volume * s.second.FadeVolume;
 
 			int32_t rest = sampleCount;
+			int32_t writingPos = 0;
+
 			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStartingPoint() * 44100);
 			auto loopEnd = (int32_t) (s.second.SoundPtr->GetLoopEndPoint() * 44100);
 			auto enabledLoop = s.second.SoundPtr->GetIsLoopingMode();
@@ -63,13 +65,15 @@ namespace osm
 						}
 					}
 
-					auto l = (int32_t) samples[i].Left + (int32_t) (m_tempSamples[i].Left * v);
-					auto r = (int32_t) samples[i].Right + (int32_t) (m_tempSamples[i].Right * v);
+					auto l = (int32_t) samples[writingPos + i].Left + (int32_t) (m_tempSamples[i].Left * v);
+					auto r = (int32_t) samples[writingPos + i].Right + (int32_t) (m_tempSamples[i].Right * v);
 
-					samples[i].Left = Clamp(l, 32767, -32768);
-					samples[i].Right = Clamp(r, 32767, -32768);
+					samples[writingPos + i].Left = Clamp(l, 32767, -32768);
+					samples[writingPos + i].Right = Clamp(r, 32767, -32768);
 				}
+				
 				s.second.SamplePos +=size;
+				writingPos += size;
 
 				rest -= size;
 

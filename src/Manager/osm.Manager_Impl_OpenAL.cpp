@@ -6,9 +6,10 @@ namespace osm
 	static const ALenum format = AL_FORMAT_STEREO16;
 	static const ALsizei freq  = 44100;
 
-	static const size_t queueSize   = 4;
-	static const size_t bufferSize  = freq / queueSize;
-	static const size_t bufferBytes = sizeof(Sample) * bufferSize;
+	static const size_t queueSize      = 4;
+	static const size_t bufferDivision = 100;
+	static const size_t bufferSize     = freq / bufferDivision;
+	static const size_t bufferBytes    = sizeof(Sample) * bufferSize;
 
 	void Manager_Impl_OpenAL::Reset()
 	{

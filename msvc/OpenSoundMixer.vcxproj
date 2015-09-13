@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\Decorder\osm.OggDecorder.cpp" />
     <ClCompile Include="..\src\Decorder\osm.WaveDecorder.cpp" />
+    <ClCompile Include="..\src\Filter\osm.Resampler.cpp" />
     <ClCompile Include="..\src\Manager\osm.Manager_Impl_PulseAudio.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -156,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\Decorder\osm.OggDecorder.h" />
     <ClInclude Include="..\src\Decorder\osm.WaveDecorder.h" />
+    <ClInclude Include="..\src\Filter\osm.Resampler.h" />
     <ClInclude Include="..\src\Manager\osm.Manager_Impl_PulseAudio.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>

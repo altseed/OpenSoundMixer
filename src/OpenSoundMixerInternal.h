@@ -11,6 +11,9 @@
 #include <memory>
 #include <atomic>
 
+#define NOMINMAX
+#include <algorithm>
+
 #ifdef _WIN32
 #include <windows.h>
 #else

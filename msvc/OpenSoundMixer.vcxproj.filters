@@ -18,6 +18,9 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="..\src\osm.Manager.cpp" />
+    <ClCompile Include="..\src\Filter\osm.Resampler.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\OpenSoundMixer.h" />
@@ -38,6 +41,9 @@
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="..\src\OpenSoundMixerInternal.h" />
+    <ClInclude Include="..\src\Filter\osm.Resampler.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Decorder">
@@ -45,6 +51,9 @@
     </Filter>
     <Filter Include="Manager">
       <UniqueIdentifier>{38d7da72-896a-45b1-bf27-d7ec7b6063b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Filter">
+      <UniqueIdentifier>{df306bb8-3fe5-40c3-89ca-6bc8cce2bbd4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

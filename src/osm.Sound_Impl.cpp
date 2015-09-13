@@ -3,6 +3,7 @@
 
 #include "Decorder/osm.OggDecorder.h"
 #include "Decorder/osm.WaveDecorder.h"
+#include "Filter/osm.Resampler.h"
 
 namespace osm
 {
@@ -86,5 +87,40 @@ namespace osm
 	float Sound_Impl::GetLength() const
 	{
 		return GetSampleCount() / 44100.0f;
+	}
+
+	bool Sound_Impl::GetIsPlaySpeedMode() const
+	{
+		return (m_resampler) ? true : false;
+	}
+
+	void Sound_Impl::SetIsPlaySpeedMode(bool isPlaySeedMode)
+	{
+		if (!isPlaySeedMode)
+			m_resampler.reset();
+		else if (!m_resampler)
+			m_resampler = std::make_shared<Resampler>();
+	}
+
+	float Sound_Impl::GetPlaySpeed() const
+	{
+		if (!m_resampler)
+			return 1.0;
+		double ratio = m_resampler->GetResampleRatio();
+		return 1.0/ratio;
+	}
+
+	void Sound_Impl::SetPlaySpeed(float playSpeed)
+	{
+		if (!m_resampler)
+			return;
+		m_resampler->SetResampleRatio(1.0/playSpeed);
+	}
+
+	Resampler *Sound_Impl::GetResampler()
+	{
+		if (m_resampler)
+			return &*m_resampler;
+		return nullptr;
 	}
 }

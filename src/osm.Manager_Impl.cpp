@@ -9,17 +9,28 @@ namespace osm
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		// 合成処理
-		m_tempSamples.resize(sampleCount);
+		int32_t tempBufferLen = sampleCount * 2;
+		m_tempSamples.resize(tempBufferLen);
 
 		memset(samples, 0, sizeof(Sample) * sampleCount);
+
+		// TODO: 複数音源で再生速度を変えた場合に出力サンプルが欠損する可能性あり
+		int32_t minActualOut = sampleCount;
 
 		for (auto& s : m_soundStates)
 		{
 			if (s.second.IsPaused) continue;
 
-			float v = s.second.Volume * s.second.FadeVolume;
+			int32_t inCount = sampleCount;
+			auto resampler = s.second.SoundPtr->GetResampler();
+			if (resampler)
+			{
+				double ratio = resampler->GetResampleRatio();
+				int32_t exceedance = resampler->GetInputExceedance();
+				inCount = std::min(tempBufferLen, (int32_t)ceil(sampleCount / ratio) + 1) - (exceedance / 16);
+			}
 
-			int32_t rest = sampleCount;
+			int32_t rest = inCount;
 			int32_t writingPos = 0;
 
 			auto loopStart = (int32_t)(s.second.SoundPtr->GetLoopStartingPoint() * 44100);
@@ -44,35 +55,9 @@ namespace osm
 					}
 				}
 
-				auto size = s.second.SoundPtr->GetSamples(m_tempSamples.data(), s.second.SamplePos, readSize);
-				for (int32_t i = 0; i < size; i++)
-				{
-					if (s.second.FadeGradient != 0.0f)
-					{
-						v = s.second.Volume * s.second.FadeVolume;
-						s.second.FadeVolume += s.second.FadeGradient;
+				auto size = s.second.SoundPtr->GetSamples(&m_tempSamples[writingPos], s.second.SamplePos, readSize);
 
-						if (s.second.FadeGradient > 0 && s.second.FadeVolume >= s.second.TargetedFadeVolume)
-						{
-							s.second.FadeGradient = 0;
-							s.second.FadeVolume = s.second.TargetedFadeVolume;
-						}
-
-						if (s.second.FadeGradient < 0 && s.second.FadeVolume <= s.second.TargetedFadeVolume)
-						{
-							s.second.FadeGradient = 0;
-							s.second.FadeVolume = s.second.TargetedFadeVolume;
-						}
-					}
-
-					auto l = (int32_t) samples[writingPos + i].Left + (int32_t) (m_tempSamples[i].Left * v);
-					auto r = (int32_t) samples[writingPos + i].Right + (int32_t) (m_tempSamples[i].Right * v);
-
-					samples[writingPos + i].Left = Clamp(l, 32767, -32768);
-					samples[writingPos + i].Right = Clamp(r, 32767, -32768);
-				}
-				
-				s.second.SamplePos +=size;
+				s.second.SamplePos += size;
 				writingPos += size;
 
 				rest -= size;
@@ -93,7 +78,53 @@ namespace osm
 					}
 				}
 			}
-			
+
+			if (writingPos < inCount) {
+				for (int32_t i = writingPos; i < inCount; ++i) {
+					m_tempSamples[i].Left = 0;
+					m_tempSamples[i].Right = 0;
+				}
+			}
+
+			int32_t actualOut = inCount;
+			if (resampler)
+			{
+				double ratio = resampler->GetResampleRatio();
+				m_resampleBuf.resize(sampleCount);
+				auto resampledCount = resampler->ProcessSamples(m_tempSamples.data(), inCount, m_resampleBuf.data(), sampleCount);
+				actualOut = resampledCount.second;
+				memcpy(m_tempSamples.data(), m_resampleBuf.data(), actualOut * sizeof(Sample));
+			}
+
+			float v = s.second.Volume * s.second.FadeVolume;
+			for (int32_t i = 0; i < actualOut; i++)
+			{
+				if (s.second.FadeGradient != 0.0f)
+				{
+					v = s.second.Volume * s.second.FadeVolume;
+					s.second.FadeVolume += s.second.FadeGradient;
+
+					if (s.second.FadeGradient > 0 && s.second.FadeVolume >= s.second.TargetedFadeVolume)
+					{
+						s.second.FadeGradient = 0;
+						s.second.FadeVolume = s.second.TargetedFadeVolume;
+					}
+
+					if (s.second.FadeGradient < 0 && s.second.FadeVolume <= s.second.TargetedFadeVolume)
+					{
+						s.second.FadeGradient = 0;
+						s.second.FadeVolume = s.second.TargetedFadeVolume;
+					}
+				}
+
+				auto l = (int32_t) samples[i].Left + (int32_t) (m_tempSamples[i].Left * v);
+				auto r = (int32_t) samples[i].Right + (int32_t) (m_tempSamples[i].Right * v);
+
+				samples[i].Left = Clamp(l, 32767, -32768);
+				samples[i].Right = Clamp(r, 32767, -32768);
+			}
+
+			minActualOut = std::min(minActualOut, actualOut);
 		}
 
 		// 削除処理
@@ -114,9 +145,9 @@ namespace osm
 			m_tempIDs.clear();
 		}
 
-		m_current += sampleCount;
+		m_current += minActualOut;
 
-		return sampleCount;
+		return minActualOut;
 	}
 
 	Manager_Impl::Manager_Impl()

@@ -40,6 +40,8 @@ namespace osm
 		std::vector<Sample>			m_tempSamples;
 		std::vector<int32_t>		m_tempIDs;
 
+		std::vector<Sample>			m_resampleBuf;
+
 		std::recursive_mutex		m_mutex;
 
 	protected:

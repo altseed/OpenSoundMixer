@@ -29,7 +29,7 @@ namespace osm
 		bool						m_isPlaybackSpeedEnabled = false;
 		float						m_playbackSpeed = 0.0;
 
-		float						m_panningPosition = 1.0;
+		float						m_panningPosition = 0.0;
 
 	public:
 		Sound_Impl();

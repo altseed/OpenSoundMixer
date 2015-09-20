@@ -29,6 +29,8 @@ namespace osm
 		bool						m_isPlaybackSpeedEnabled = false;
 		float						m_playbackSpeed = 0.0;
 
+		float						m_panningPosition = 1.0;
+
 	public:
 		Sound_Impl();
 		virtual ~Sound_Impl();
@@ -58,6 +60,10 @@ namespace osm
 		float GetPlaybackSpeed() const override;
 
 		void SetPlaybackSpeed(float playbackSpeed) override;
+
+		float GetPanningPosition() const override;
+
+		void SetPanningPosition(float panningPosition) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

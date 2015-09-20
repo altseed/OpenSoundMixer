@@ -1,6 +1,7 @@
 
 #include "osm.Manager_Impl.h"
 #include "osm.Sound_Impl.h"
+#include "Filter/osm.Panner.h"
 
 namespace osm
 {
@@ -105,6 +106,14 @@ namespace osm
 				auto resampledCount = resampler->ProcessSamples(m_tempSamples.data(), inCount, m_resampleBuf.data(), sampleCount);
 				actualOut = resampledCount.second;
 				memcpy(m_tempSamples.data(), m_resampleBuf.data(), actualOut * sizeof(Sample));
+			}
+
+			float panningPosition = s.second.SoundPtr->GetPanningPosition();
+			if (panningPosition != 0.0)
+			{
+				Panner panner;
+				panner.SetPosition(panningPosition);
+				panner.ProcessSamples(m_tempSamples.data(), actualOut, m_tempSamples.data(), actualOut);
 			}
 
 			float v = s.second.Volume * s.second.FadeVolume;

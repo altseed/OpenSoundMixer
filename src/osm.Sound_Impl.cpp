@@ -108,4 +108,14 @@ namespace osm
 	{
 		m_playbackSpeed = playbackSpeed;
 	}
+
+	float Sound_Impl::GetPanningPosition() const
+	{
+		return m_panningPosition;
+	}
+
+	void Sound_Impl::SetPanningPosition(float panningPosition)
+	{
+		m_panningPosition = panningPosition;
+	}
 }

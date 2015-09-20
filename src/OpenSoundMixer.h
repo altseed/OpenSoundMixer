@@ -66,6 +66,10 @@ namespace osm
 		virtual float GetPlaybackSpeed() const = 0;
 
 		virtual void SetPlaybackSpeed(float playbackSpeed) = 0;
+
+		virtual float GetPanningPosition() const = 0;
+
+		virtual void SetPanningPosition(float panningPosition) = 0;
 	};
 
 	class Manager

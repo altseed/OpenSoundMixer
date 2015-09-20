@@ -28,6 +28,7 @@ set(common_src
 	src/Decorder/osm.OggDecorder.cpp
 	src/Decorder/osm.WaveDecorder.cpp
 	src/Filter/osm.Resampler.cpp
+	src/Filter/osm.Panner.cpp
 	)
 
 set(xaudio2_src

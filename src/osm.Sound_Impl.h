@@ -27,7 +27,7 @@ namespace osm
 		bool						isLoopMode = false;
 
 		bool						m_isPlaybackSpeedEnabled = false;
-		float						m_playbackSpeed = 0.0;
+		float						m_playbackSpeed = 1.0;
 
 		float						m_panningPosition = 0.0;
 

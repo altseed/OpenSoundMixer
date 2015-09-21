@@ -106,7 +106,7 @@ namespace osm
 
 	void Sound_Impl::SetPlaybackSpeed(float playbackSpeed)
 	{
-		m_playbackSpeed = playbackSpeed;
+		m_playbackSpeed = Clamp(playbackSpeed, 4.0, 0.25);
 	}
 
 	float Sound_Impl::GetPanningPosition() const
@@ -116,6 +116,6 @@ namespace osm
 
 	void Sound_Impl::SetPanningPosition(float panningPosition)
 	{
-		m_panningPosition = panningPosition;
+		m_panningPosition = Clamp(panningPosition, 1.0, -1.0);
 	}
 }

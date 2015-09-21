@@ -10,7 +10,7 @@ namespace osm
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		// ‡¬ˆ—
-		int32_t tempBufferLen = sampleCount * 2;
+		int32_t tempBufferLen = sampleCount * 5; // ”ä—¦‚ÍÄ¶‘¬“x‚ÌãŒÀ”{”+ƒ¿
 		m_tempSamples.resize(tempBufferLen);
 
 		memset(samples, 0, sizeof(Sample) * sampleCount);

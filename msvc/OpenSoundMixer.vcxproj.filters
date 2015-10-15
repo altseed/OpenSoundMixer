@@ -21,6 +21,9 @@
     <ClCompile Include="..\src\Filter\osm.Resampler.cpp">
       <Filter>Filter</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Filter\osm.Panner.cpp">
+      <Filter>Filter</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\OpenSoundMixer.h" />
@@ -42,6 +45,9 @@
     </ClInclude>
     <ClInclude Include="..\src\OpenSoundMixerInternal.h" />
     <ClInclude Include="..\src\Filter\osm.Resampler.h">
+      <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Filter\osm.Panner.h">
       <Filter>Filter</Filter>
     </ClInclude>
   </ItemGroup>

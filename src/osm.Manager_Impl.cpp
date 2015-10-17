@@ -68,6 +68,10 @@ namespace osm
 				}
 
 				auto size = s.second.SoundPtr->GetSamples(&m_tempSamples[writingPos], s.second.SamplePos, readSize);
+				if (size < 0) { // ƒGƒ‰[”­¶‚µ‚½‚Ì‚Å‚Æ‚è‚ ‚¦‚¸’âŽ~
+					s.second.SamplePos = s.second.SoundPtr->GetSampleCount() + 1;
+					break;
+				}
 
 				s.second.SamplePos += size;
 				writingPos += size;

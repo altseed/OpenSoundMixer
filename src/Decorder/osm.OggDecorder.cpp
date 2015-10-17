@@ -173,6 +173,9 @@ namespace osm
 				1,
 				&bitstream
 				);
+			if (readSize < 0) { // ƒGƒ‰[”­¶
+				return readSize;
+			}
 
 			m_original.Samples.resize(m_original.Samples.size() + readSize);
 			auto dst = m_original.Samples.data() + (m_original.Samples.size() - readSize);

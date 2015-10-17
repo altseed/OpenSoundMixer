@@ -156,12 +156,7 @@ namespace osm
 			m_original.CurrentSample = sampleStart_i;
 		}
 
-		auto maxReadSize = 4096;
-		if (count < maxReadSize)
-		{
-			maxReadSize = count * 2;
-			if (maxReadSize > 4096) maxReadSize = 4096;
-		}
+		auto maxReadSize = Clamp(count * 2, 4096, 128);
 
 		while (m_original.CurrentSample + m_original.Samples.size() / sampleSize <= sampleEnd_i)
 		{

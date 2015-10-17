@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "OpenSoundMixer.h"
@@ -65,7 +65,7 @@ namespace osm
 
 		void SetPanningPosition(float panningPosition) override;
 
-		// IReference‚ğŒp³‚µ‚½ƒfƒoƒCƒXƒIƒuƒWƒFƒNƒgŒü‚¯’è‹`
+		// IReferenceã‚’ç¶™æ‰¿ã—ãŸãƒ‡ãƒã‚¤ã‚¹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‘ã‘å®šç¾©
 #if !SWIG
 	public:
 		virtual int GetRef() { return ReferenceObject::GetRef(); }

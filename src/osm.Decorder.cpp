@@ -1,4 +1,4 @@
-
+﻿
 #include "osm.Decorder.h"
 
 namespace osm

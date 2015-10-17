@@ -1,4 +1,4 @@
-
+ï»¿
 #include "osm.OggDecorder.h"
 
 #include <vorbis/vorbisfile.h>
@@ -148,7 +148,7 @@ namespace osm
 
 		int32_t sampleSize = 2 * m_original.ChannelCount;
 
-		// Šª‚«–ß‚µor‘å•ƒXƒLƒbƒv
+		// å·»ãæˆ»ã—orå¤§å¹…ã‚¹ã‚­ãƒƒãƒ—
 		if (m_original.CurrentSample > sampleStart_i || sampleStart_i - m_original.CurrentSample > 44100 / 5)
 		{
 			m_original.Samples.clear();
@@ -173,7 +173,7 @@ namespace osm
 				1,
 				&bitstream
 				);
-			if (readSize < 0) { // ƒGƒ‰[”­¶
+			if (readSize < 0) { // ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ
 				return readSize;
 			}
 
@@ -181,7 +181,7 @@ namespace osm
 			auto dst = m_original.Samples.data() + (m_original.Samples.size() - readSize);
 			memcpy(dst, buffer, readSize);
 			
-			// ––”öH
+			// æœ«å°¾ï¼Ÿ
 			if (m_original.CurrentSample + m_original.Samples.size() / sampleSize == m_original.TotalSample) break;
 		}
 
@@ -200,7 +200,7 @@ namespace osm
 			{
 				m_original.CurrentSample += i;
 
-				// Žg—pÏ‚Ýíœ
+				// ä½¿ç”¨æ¸ˆã¿å‰Šé™¤
 				m_original.CurrentSample = sampleEnd_i;
 				m_original.Samples.clear();
 
@@ -221,7 +221,7 @@ namespace osm
 				samples[i].Left = left1 * (1.0 - sampleD);
 				samples[i].Right = right1 * (1.0 - sampleD);
 
-				// Žg—pÏ‚Ýíœ
+				// ä½¿ç”¨æ¸ˆã¿å‰Šé™¤
 				m_original.CurrentSample = sampleEnd_i;
 				m_original.Samples.clear();
 
@@ -248,7 +248,7 @@ namespace osm
 			}
 		}
 
-		// Žg—pÏ‚Ýíœ
+		// ä½¿ç”¨æ¸ˆã¿å‰Šé™¤
 		auto removingSize = (sampleEnd_i - 1 - m_original.CurrentSample) * sampleSize;
 		m_original.Samples.erase(m_original.Samples.begin(), m_original.Samples.begin() + removingSize);
 		m_original.CurrentSample = sampleEnd_i - 1;

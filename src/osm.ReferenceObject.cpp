@@ -1,4 +1,4 @@
-
+﻿
 #include "osm.ReferenceObject.h"
 
 namespace osm

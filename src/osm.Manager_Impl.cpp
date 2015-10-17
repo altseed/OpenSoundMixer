@@ -1,4 +1,4 @@
-
+ï»¿
 #include "osm.Manager_Impl.h"
 #include "osm.Sound_Impl.h"
 #include "Filter/osm.Panner.h"
@@ -9,13 +9,13 @@ namespace osm
 	{
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
-		// ‡¬ˆ—
-		int32_t tempBufferLen = sampleCount * 5; // ”ä—¦‚ÍÄ¶‘¬“x‚ÌãŒÀ”{”+ƒ¿
+		// åˆæˆå‡¦ç†
+		int32_t tempBufferLen = sampleCount * 5; // æ¯”ç‡ã¯å†ç”Ÿé€Ÿåº¦ã®ä¸Šé™å€æ•°+Î±
 		m_tempSamples.resize(tempBufferLen);
 
 		memset(samples, 0, sizeof(Sample) * sampleCount);
 
-		// TODO: •¡”‰¹Œ¹‚ÅÄ¶‘¬“x‚ğ•Ï‚¦‚½ê‡‚Éo—ÍƒTƒ“ƒvƒ‹‚ªŒ‡‘¹‚·‚é‰Â”\«‚ ‚è
+		// TODO: è¤‡æ•°éŸ³æºã§å†ç”Ÿé€Ÿåº¦ã‚’å¤‰ãˆãŸå ´åˆã«å‡ºåŠ›ã‚µãƒ³ãƒ—ãƒ«ãŒæ¬ æã™ã‚‹å¯èƒ½æ€§ã‚ã‚Š
 		int32_t minActualOut = sampleCount;
 
 		for (auto& s : m_soundStates)
@@ -68,7 +68,7 @@ namespace osm
 				}
 
 				auto size = s.second.SoundPtr->GetSamples(&m_tempSamples[writingPos], s.second.SamplePos, readSize);
-				if (size < 0) { // ƒGƒ‰[”­¶‚µ‚½‚Ì‚Å‚Æ‚è‚ ‚¦‚¸’â~
+				if (size < 0) { // ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿã—ãŸã®ã§ã¨ã‚Šã‚ãˆãšåœæ­¢
 					s.second.SamplePos = s.second.SoundPtr->GetSampleCount() + 1;
 					break;
 				}
@@ -151,7 +151,7 @@ namespace osm
 			minActualOut = std::min(minActualOut, actualOut);
 		}
 
-		// íœˆ—
+		// å‰Šé™¤å‡¦ç†
 		{
 			for (auto& s : m_soundStates)
 			{

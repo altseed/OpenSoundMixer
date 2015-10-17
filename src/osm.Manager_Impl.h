@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "OpenSoundMixer.h"
@@ -54,8 +54,8 @@ namespace osm
 		int32_t ReadSamples( Sample* samples, int32_t sampleCount );
 
 		/**
-		@brief	§Œä—p‚Ìƒ~ƒ…[ƒeƒbƒNƒX‚ğæ“¾‚·‚éB
-		@return	ƒ~ƒ…[ƒeƒbƒNƒX
+		@brief	åˆ¶å¾¡ç”¨ã®ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚
+		@return	ãƒŸãƒ¥ãƒ¼ãƒ†ãƒƒã‚¯ã‚¹
 		*/
 		std::recursive_mutex& GetMutex(){ return m_mutex; }
 	public:
@@ -88,7 +88,7 @@ namespace osm
 
 		void Fade(int32_t id, float second, float targetedVolume) override;
 
-		// IReference‚ğŒp³‚µ‚½ƒfƒoƒCƒXƒIƒuƒWƒFƒNƒgŒü‚¯’è‹`
+		// IReferenceã‚’ç¶™æ‰¿ã—ãŸãƒ‡ãƒã‚¤ã‚¹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‘ã‘å®šç¾©
 #if !SWIG
 	public:
 		virtual int GetRef() { return ReferenceObject::GetRef(); }

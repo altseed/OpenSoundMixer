@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "OpenSoundMixer.h"
@@ -7,7 +7,7 @@
 namespace osm
 {
 	/**
-	@brief	QÆƒJƒEƒ“ƒ^ƒIƒuƒWƒFƒNƒg
+	@brief	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	*/
 	class ReferenceObject
 		: public IReference

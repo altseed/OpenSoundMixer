@@ -1,4 +1,4 @@
-
+﻿
 #include "osm.Manager_Impl_XAudio2.h"
 
 namespace osm
@@ -65,7 +65,7 @@ namespace osm
 			}
 		}
 
-		// �I���܂ő҂�
+		// 終わりまで待つ
 		while (true)
 		{
 			XAUDIO2_VOICE_STATE state;

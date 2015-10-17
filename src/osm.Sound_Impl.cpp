@@ -1,4 +1,4 @@
-
+﻿
 #include "osm.Sound_Impl.h"
 
 #include "Decorder/osm.OggDecorder.h"

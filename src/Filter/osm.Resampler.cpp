@@ -1,4 +1,4 @@
-
+﻿
 #include <algorithm>
 #include "../OpenSoundMixerInternal.h"
 #include "osm.Resampler.h"

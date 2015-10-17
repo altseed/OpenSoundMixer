@@ -1,4 +1,4 @@
-
+﻿
 #include "osm.Manager_Impl_PulseAudio.h"
 
 #include <dlfcn.h>
@@ -87,7 +87,7 @@ namespace osm
 			iterate();
 		}
 
-		// �I���܂ő҂�
+		// 終わりまで待つ
 		while (!hasError)
 		{
 			size_t writableSize = this_->CALL_FUNCPTR_MV(pa_stream_writable_size)(this_->m_stream);

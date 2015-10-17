@@ -1,4 +1,4 @@
-
+ï»¿
 #include "osm.WaveDecorder.h"
 
 namespace osm
@@ -178,50 +178,50 @@ namespace osm
 
 			if (STRICMP("fmt ", chunk) == 0)
 			{
-				// ƒ`ƒƒƒ“ƒNƒTƒCƒY
+				// ãƒãƒ£ãƒ³ã‚¯ã‚µã‚¤ã‚º
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 
-				// ƒtƒH[ƒ}ƒbƒg
+				// ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 				if (!Read(&fmt, data, 16, offset, size)) return false;
 				offset += (chunkSize - 16);
 
 				if (fmt.FormatID == 1)
 				{
-					// PCM‚Ìê‡
+					// PCMã®å ´åˆ
 				}
 				else
 				{
-					// ‚»‚êˆÈŠO
+					// ãã‚Œä»¥å¤–
 					return false;
 				}
 			}
 			else if (STRICMP("data", chunk) == 0)
 			{
-				// ƒ`ƒƒƒ“ƒNƒTƒCƒY
+				// ãƒãƒ£ãƒ³ã‚¯ã‚µã‚¤ã‚º
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 
-				// ƒf[ƒ^
+				// ãƒ‡ãƒ¼ã‚¿
 				m_data.resize(chunkSize);
 				if (!Read(m_data.data(), data, chunkSize, offset, size)) return false;
 
 				if (fmt.FormatID == 1)
 				{
-					// PCM‚Ìê‡
+					// PCMã®å ´åˆ
 					auto pcm = new PCM(m_data.data(), m_data.size(), fmt.ChannelCount, fmt.SamplesPerSec, fmt.BitsPerSample);
 					m_pcm = std::shared_ptr<PCM>(pcm);
 				}
 			}
 			else if (STRICMP("JUNK", chunk) == 0)
 			{
-				// ƒ`ƒƒƒ“ƒNƒTƒCƒY
+				// ãƒãƒ£ãƒ³ã‚¯ã‚µã‚¤ã‚º
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 
-				// •s–¾
+				// ä¸æ˜
 				offset += chunkSize;
 			}
 			else
 			{
-				// ––”ö‚ÉƒSƒ~ƒf[ƒ^‚ğ‚Â‚¯‚Ä‚¢‚éê‡‚ª‚ ‚é‚Ì‚ÅƒXƒLƒbƒv
+				// æœ«å°¾ã«ã‚´ãƒŸãƒ‡ãƒ¼ã‚¿ã‚’ã¤ã‘ã¦ã„ã‚‹å ´åˆãŒã‚ã‚‹ã®ã§ã‚¹ã‚­ãƒƒãƒ—
 				if (m_pcm != nullptr)
 				{
 					return true;
@@ -231,10 +231,10 @@ namespace osm
 					return false;
 				}
 
-				// ƒ`ƒƒƒ“ƒNƒTƒCƒY
+				// ãƒãƒ£ãƒ³ã‚¯ã‚µã‚¤ã‚º
 				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 
-				// •s–¾
+				// ä¸æ˜
 				offset += chunkSize;
 			}
 		}

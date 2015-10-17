@@ -1,4 +1,4 @@
-
+﻿
 #pragma once
 
 #include "../osm.Manager_Impl.h"

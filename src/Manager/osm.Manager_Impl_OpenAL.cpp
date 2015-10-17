@@ -1,4 +1,4 @@
-
+ï»¿
 #include "osm.Manager_Impl_OpenAL.h"
 
 namespace osm
@@ -53,7 +53,7 @@ namespace osm
 
 		while (m_threading)
 		{
-			// ƒoƒbƒtƒ@‚Éƒf[ƒ^‚ğ“Ç‚İ‚İƒ\[ƒX‚É’Ç‰Á
+			// ãƒãƒƒãƒ•ã‚¡ã«ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ã‚½ãƒ¼ã‚¹ã«è¿½åŠ 
 			ALint queue;
 			alGetSourceiv(m_source, AL_BUFFERS_QUEUED, &queue);
 			if (!queue) {
@@ -67,7 +67,7 @@ namespace osm
 				}
 			}
 
-			// Ä¶ó‘Ô‚É‚·‚é
+			// å†ç”ŸçŠ¶æ…‹ã«ã™ã‚‹
 			ALint state;
 			alGetSourcei(m_source, AL_SOURCE_STATE, &state);
 			if (state != AL_PLAYING)
@@ -75,7 +75,7 @@ namespace osm
 				alSourcePlay(m_source);
 			}
 
-			// Ä¶I—¹‚µ‚½ƒoƒbƒtƒ@‚Éƒf[ƒ^‚ğ“Ç‚İ‚İ
+			// å†ç”Ÿçµ‚äº†ã—ãŸãƒãƒƒãƒ•ã‚¡ã«ãƒ‡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿
 			ALint processed;
 			alGetSourceiv(m_source, AL_BUFFERS_PROCESSED, &processed);
 			while (processed > 0)
@@ -95,7 +95,7 @@ namespace osm
 			Sleep(10);
 		}
 
-		// I‚í‚è‚Ü‚Å‘Ò‚Â
+		// çµ‚ã‚ã‚Šã¾ã§å¾…ã¤
 		while (true)
 		{
 			ALint queued;

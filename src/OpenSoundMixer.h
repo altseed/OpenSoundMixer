@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include <stdio.h>
@@ -13,26 +13,26 @@ namespace osm
 	};
 
 	/**
-	@brief	QÆƒJƒEƒ“ƒ^‚ÌƒCƒ“ƒ^[ƒtƒF[ƒX
+	@brief	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹
 	*/
 	class IReference
 	{
 	public:
 		/**
-		@brief	QÆƒJƒEƒ“ƒ^‚ğ‰ÁZ‚·‚éB
-		@return	‰ÁZŒã‚ÌQÆƒJƒEƒ“ƒ^
+		@brief	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚’åŠ ç®—ã™ã‚‹ã€‚
+		@return	åŠ ç®—å¾Œã®å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿
 		*/
 		virtual int AddRef() = 0;
 
 		/**
-		@brief	QÆƒJƒEƒ“ƒ^‚ğæ“¾‚·‚éB
-		@return	QÆƒJƒEƒ“ƒ^
+		@brief	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚’å–å¾—ã™ã‚‹ã€‚
+		@return	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿
 		*/
 		virtual int GetRef() = 0;
 
 		/**
-		@brief	QÆƒJƒEƒ“ƒ^‚ğŒ¸Z‚·‚éB0‚É‚È‚Á‚½AƒCƒ“ƒXƒ^ƒ“ƒX‚ğíœ‚·‚éB
-		@return	Œ¸ZŒã‚ÌQÆƒJƒEƒ“ƒ^
+		@brief	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚’æ¸›ç®—ã™ã‚‹ã€‚0ã«ãªã£ãŸæ™‚ã€ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+		@return	æ¸›ç®—å¾Œã®å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿
 		*/
 		virtual int Release() = 0;
 	};
@@ -105,13 +105,13 @@ namespace osm
 		virtual void FadeOut(int32_t id, float second) = 0;
 
 		/**
-			@brief	”CˆÓ‚Ì‰¹—Ê‚É‰¹—Ê‚ğˆê’èŠÔ‚©‚¯‚Ä•ÏX‚·‚éB
-			@param	id		‰¹‚ÌID
-			@param	second	•ÏX‚É‚©‚©‚éŠÔ(•b)
-			@param	targetedVolume	•ÏXæ‚Ì‰¹—Ê(0.0`1.0)
+			@brief	ä»»æ„ã®éŸ³é‡ã«éŸ³é‡ã‚’ä¸€å®šæ™‚é–“ã‹ã‘ã¦å¤‰æ›´ã™ã‚‹ã€‚
+			@param	id		éŸ³ã®ID
+			@param	second	å¤‰æ›´ã«ã‹ã‹ã‚‹æ™‚é–“(ç§’)
+			@param	targetedVolume	å¤‰æ›´å…ˆã®éŸ³é‡(0.0ã€œ1.0)
 			@note
-			‚±‚Ìw’è‚³‚ê‚é‰¹—Ê‚ÍSetVolume‚Éw’è‚³‚ê‚é‰¹—Ê‚Æ‚ÍˆÙ‚È‚èAFadeInAFadeOut‚Ég—p‚³‚ê‚é‰¹—Ê‚Æ‹¤’Ê‚Å‚ ‚éB
-			‚Â‚Ü‚èA‚±‚Ìƒƒ\ƒbƒh‚ÍFadeInAFadeOut‚Ì”CˆÓ‰¹—Êw’è”Å‚ÆŒ¾‚¦‚éB
+			ã“ã®æŒ‡å®šã•ã‚Œã‚‹éŸ³é‡ã¯SetVolumeã«æŒ‡å®šã•ã‚Œã‚‹éŸ³é‡ã¨ã¯ç•°ãªã‚Šã€FadeInã€FadeOutã«ä½¿ç”¨ã•ã‚Œã‚‹éŸ³é‡ã¨å…±é€šã§ã‚ã‚‹ã€‚
+			ã¤ã¾ã‚Šã€ã“ã®ãƒ¡ã‚½ãƒƒãƒ‰ã¯FadeInã€FadeOutã®ä»»æ„éŸ³é‡æŒ‡å®šç‰ˆã¨è¨€ãˆã‚‹ã€‚
 		*/
 		virtual void Fade(int32_t id, float second, float targetedVolume) = 0;
 

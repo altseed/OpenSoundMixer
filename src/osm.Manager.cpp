@@ -1,4 +1,4 @@
-
+﻿
 #include "OpenSoundMixer.h"
 
 #if _WIN32

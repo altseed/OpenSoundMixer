@@ -138,6 +138,9 @@ namespace osm
 					{
 						s.second.FadeGradient = 0;
 						s.second.FadeVolume = s.second.TargetedFadeVolume;
+						if (s.second.FadeVolume == 0) { // FadeOut終了時に再生停止する。
+							s.second.SamplePos = s.second.SoundPtr->GetSampleCount();
+						}
 					}
 				}
 

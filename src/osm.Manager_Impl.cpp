@@ -308,12 +308,12 @@ namespace osm
 	{
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
-		// FadeVolumeが初期状態1.0の場合は0.0にしてからフェードをかける。
+		// FadeVolumeが初期状態1.0の場合は微小値にしてからフェードをかける。
 		auto s = m_soundStates.find(id);
 		if (s != m_soundStates.end())
 		{
 			if (s->second.FadeVolume == 1.0f) {
-				s->second.FadeVolume = 0.0f;
+				s->second.FadeVolume = 1e-5f;
 			}
 		}
 

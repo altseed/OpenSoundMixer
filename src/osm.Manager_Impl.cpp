@@ -306,6 +306,17 @@ namespace osm
 
 	void Manager_Impl::FadeIn(int32_t id, float second)
 	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+		// FadeVolumeが初期状態1.0の場合は0.0にしてからフェードをかける。
+		auto s = m_soundStates.find(id);
+		if (s != m_soundStates.end())
+		{
+			if (s->second.FadeVolume == 1.0f) {
+				s->second.FadeVolume = 0.0f;
+			}
+		}
+
 		Fade(id, second, 1.0f);
 	}
 

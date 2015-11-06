@@ -213,6 +213,8 @@ namespace osm
 
 	int32_t Manager_Impl::Play( Sound* sound )
 	{
+		if (sound == nullptr) return -1;
+
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 		m_stateID++;
 

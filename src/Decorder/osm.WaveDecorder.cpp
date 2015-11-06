@@ -219,6 +219,14 @@ namespace osm
 				// 不明
 				offset += chunkSize;
 			}
+			else if (STRICMP("fact", chunk) == 0)
+			{
+				// チャンクサイズ
+				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+
+				// 不明
+				offset += chunkSize;
+			}
 			else
 			{
 				// 末尾にゴミデータをつけている場合があるのでスキップ

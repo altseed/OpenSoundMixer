@@ -25,7 +25,7 @@ namespace osm
 			int32_t inCount = sampleCount;
 
 			Resampler *resampler = nullptr;
-			if (s.second.SoundPtr->GetIsPlaybackSpeedEnabled())
+			if (s.second.IsPlaybackSpeedEnabled)
 			{
 				if (!s.second.ResamplerPtr) {
 					s.second.ResamplerPtr = std::make_shared<Resampler>();
@@ -35,7 +35,7 @@ namespace osm
 
 			if (resampler)
 			{
-				double playbackSpeed = s.second.SoundPtr->GetPlaybackSpeed();
+				double playbackSpeed = s.second.PlaybackSpeed;
 				double ratio = 1.0 / playbackSpeed;
 				resampler->SetResampleRatio(ratio);
 				int32_t exceedance = resampler->GetInputExceedance();
@@ -112,7 +112,7 @@ namespace osm
 				memcpy(m_tempSamples.data(), m_resampleBuf.data(), actualOut * sizeof(Sample));
 			}
 
-			float panningPosition = s.second.SoundPtr->GetPanningPosition();
+			float panningPosition = s.second.PanningPosition;
 			if (panningPosition != 0.0)
 			{
 				Panner panner;
@@ -361,4 +361,65 @@ namespace osm
 			}
 		}
 	}
+
+	bool Manager_Impl::GetIsPlaybackSpeedEnabled(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return false;
+
+		return s->second.IsPlaybackSpeedEnabled;
+	}
+
+	void Manager_Impl::SetIsPlaybackSpeedEnabled(int32_t id, bool isPlaybackSpeedEnabled)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return;
+
+		s->second.IsPlaybackSpeedEnabled = isPlaybackSpeedEnabled;
+	}
+
+	float Manager_Impl::GetPlaybackSpeed(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return 1.0;
+
+		return s->second.PlaybackSpeed;
+	}
+
+	void Manager_Impl::SetPlaybackSpeed(int32_t id, float playbackSpeed)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return;
+
+		s->second.PlaybackSpeed = Clamp(playbackSpeed, 4.0, 0.25);
+	}
+
+	float Manager_Impl::GetPanningPosition(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return 0.0;
+
+		return s->second.PanningPosition;
+	}
+
+	void Manager_Impl::SetPanningPosition(int32_t id, float panningPosition)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return;
+
+		s->second.PanningPosition = Clamp(panningPosition, 1.0, -1.0);
+	}
+
 }

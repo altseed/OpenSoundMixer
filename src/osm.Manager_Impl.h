@@ -32,7 +32,11 @@ namespace osm
 			float			FadeVolume;
 			float			TargetedFadeVolume;
 
+			bool			IsPlaybackSpeedEnabled = false;
+			float			PlaybackSpeed = 1.0;
 			std::shared_ptr<Resampler> ResamplerPtr;
+
+			float			PanningPosition = 0.0;
 		};
 
 		int32_t	m_stateID;
@@ -87,6 +91,18 @@ namespace osm
 		void FadeOut(int32_t id, float second) override;
 
 		void Fade(int32_t id, float second, float targetedVolume) override;
+
+		bool GetIsPlaybackSpeedEnabled(int32_t id) override;
+
+		void SetIsPlaybackSpeedEnabled(int32_t id, bool isPlaybackSpeedEnabled) override;
+
+		float GetPlaybackSpeed(int32_t id) override;
+
+		void SetPlaybackSpeed(int32_t id, float playbackSpeed) override;
+
+		float GetPanningPosition(int32_t id) override;
+
+		void SetPanningPosition(int32_t id, float panningPosition) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

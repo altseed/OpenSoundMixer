@@ -26,11 +26,6 @@ namespace osm
 		float						m_loopEnd;
 		bool						isLoopMode = false;
 
-		bool						m_isPlaybackSpeedEnabled = false;
-		float						m_playbackSpeed = 1.0;
-
-		float						m_panningPosition = 0.0;
-
 	public:
 		Sound_Impl();
 		virtual ~Sound_Impl();
@@ -52,18 +47,6 @@ namespace osm
 		void SetIsLoopingMode(bool isLoopingMode) { isLoopMode = isLoopingMode; }
 
 		float GetLength() const override;
-
-		bool GetIsPlaybackSpeedEnabled() const override;
-
-		void SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled) override;
-
-		float GetPlaybackSpeed() const override;
-
-		void SetPlaybackSpeed(float playbackSpeed) override;
-
-		float GetPanningPosition() const override;
-
-		void SetPanningPosition(float panningPosition) override;
 
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG

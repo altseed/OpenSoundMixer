@@ -88,34 +88,4 @@ namespace osm
 	{
 		return GetSampleCount() / 44100.0f;
 	}
-
-	bool Sound_Impl::GetIsPlaybackSpeedEnabled() const
-	{
-		return m_isPlaybackSpeedEnabled;
-	}
-
-	void Sound_Impl::SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled)
-	{
-		m_isPlaybackSpeedEnabled = isPlaybackSpeedEnabled;
-	}
-
-	float Sound_Impl::GetPlaybackSpeed() const
-	{
-		return m_playbackSpeed;
-	}
-
-	void Sound_Impl::SetPlaybackSpeed(float playbackSpeed)
-	{
-		m_playbackSpeed = Clamp(playbackSpeed, 4.0, 0.25);
-	}
-
-	float Sound_Impl::GetPanningPosition() const
-	{
-		return m_panningPosition;
-	}
-
-	void Sound_Impl::SetPanningPosition(float panningPosition)
-	{
-		m_panningPosition = Clamp(panningPosition, 1.0, -1.0);
-	}
 }

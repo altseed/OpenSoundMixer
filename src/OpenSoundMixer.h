@@ -58,18 +58,6 @@ namespace osm
 		virtual void SetIsLoopingMode(bool isLoopingMode) = 0;
 
 		virtual float GetLength() const = 0;
-
-		virtual bool GetIsPlaybackSpeedEnabled() const = 0;
-
-		virtual void SetIsPlaybackSpeedEnabled(bool isPlaybackSpeedEnabled) = 0;
-
-		virtual float GetPlaybackSpeed() const = 0;
-
-		virtual void SetPlaybackSpeed(float playbackSpeed) = 0;
-
-		virtual float GetPanningPosition() const = 0;
-
-		virtual void SetPanningPosition(float panningPosition) = 0;
 	};
 
 	class Manager
@@ -114,6 +102,18 @@ namespace osm
 			つまり、このメソッドはFadeIn、FadeOutの任意音量指定版と言える。
 		*/
 		virtual void Fade(int32_t id, float second, float targetedVolume) = 0;
+
+		virtual bool GetIsPlaybackSpeedEnabled(int32_t id) = 0;
+
+		virtual void SetIsPlaybackSpeedEnabled(int32_t id, bool isPlaybackSpeedEnabled) = 0;
+
+		virtual float GetPlaybackSpeed(int32_t id) = 0;
+
+		virtual void SetPlaybackSpeed(int32_t id, float playbackSpeed) = 0;
+
+		virtual float GetPanningPosition(int32_t id) = 0;
+
+		virtual void SetPanningPosition(int32_t id, float panningPosition) = 0;
 
 		static Manager* Create();
 	};

@@ -4,6 +4,9 @@ set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
 # プロジェクト名
 project(OpenSoundMixer)
 
+#
+option(BUILD_TEST "Build test" OFF)
+
 # CMake バージョンチェック
 if (MSVC)
 cmake_minimum_required(VERSION 2.8.11)
@@ -40,8 +43,10 @@ set(pulse_audio_src
 set(open_al_src
 	src/Manager/osm.Manager_Impl_OpenAL.cpp)
 
-set(test_src
-	src_test/main.cpp)
+if (BUILD_TEST)
+	set(test_src
+		src_test/main.cpp)
+endif()
 
 if(WIN32)
 	list(APPEND common_src
@@ -71,7 +76,10 @@ link_directories(
 	lib/)
 
 # コンパイル先を追加
-add_executable( osmtest ${test_src} )
+if (BUILD_TEST)
+	add_executable( osmtest ${test_src} )
+endif()
+
 add_library( osmlib STATIC ${common_src} )
 
 if (MSVC)
@@ -121,11 +129,18 @@ endif()
 if (MSVC)
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME_DEBUG "OpenSoundMixer" )
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME_RELEASE "OpenSoundMixer" )
-set_target_properties(osmtest PROPERTIES OUTPUT_NAME_DEBUG "OpenSoundMixerTest" )
-set_target_properties(osmtest PROPERTIES OUTPUT_NAME_RELEASE "OpenSoundMixerTest" )
+
+if (BUILD_TEST)
+	set_target_properties(osmtest PROPERTIES OUTPUT_NAME_DEBUG "OpenSoundMixerTest" )
+	set_target_properties(osmtest PROPERTIES OUTPUT_NAME_RELEASE "OpenSoundMixerTest" )
+endif()
+
 else()
 set_target_properties(osmlib PROPERTIES OUTPUT_NAME "OpenSoundMixer" )
-set_target_properties(osmtest PROPERTIES OUTPUT_NAME "OpenSoundMixerTest" )
+
+if (BUILD_TEST)
+	set_target_properties(osmtest PROPERTIES OUTPUT_NAME "OpenSoundMixerTest" )
+endif()
 
 set_target_properties(osmlib PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "lib/" )
 set_target_properties(osmlib PROPERTIES LIBRARY_OUTPUT_DIRECTORY "lib/" )
@@ -136,8 +151,10 @@ install(
 	ARCHIVE DESTINATION lib
 	LIBRARY DESTINATION lib)
 
-install(
-	TARGETS osmtest
-	RUNTIME DESTINATION bin
-	ARCHIVE DESTINATION bin
-	LIBRARY DESTINATION bin)
+if (BUILD_TEST)
+	install(
+		TARGETS osmtest
+		RUNTIME DESTINATION bin
+		ARCHIVE DESTINATION bin
+		LIBRARY DESTINATION bin)
+endif()

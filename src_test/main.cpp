@@ -1,12 +1,8 @@
 
 #include <vector>
 #include <string>
-
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
+#include <chrono>
+#include <thread>
 
 #if _MSC_VER >= 1900
 
@@ -18,7 +14,7 @@
 #pragma comment(lib,"x64/Release/OpenSoundMixer.lib")
 #endif
 
-#else
+#elif _WIN32
 
 #if _DEBUG
 #pragma comment(lib,"x86/Debug/OpenSoundMixer.lib")
@@ -37,7 +33,7 @@
 #pragma comment(lib,"x64/Release/OpenSoundMixer.lib")
 #endif
 
-#else
+#elif _WIN32
 
 #if _DEBUG
 #pragma comment(lib,"x86/Debug/OpenSoundMixer.lib")
@@ -51,17 +47,11 @@
 
 #include "OpenSoundMixer.h"
 
-#ifdef _WIN32
-inline void Sleep_(int32_t ms)
+inline void Sleep(int32_t ms)
 {
-	::Sleep(ms);
+	std::chrono::milliseconds d(ms);
+	std::this_thread::sleep_for(d);
 }
-#else
-inline void Sleep_(int32_t ms)
-{
-	usleep(1000 * ms);
-}
-#endif
 
 template <class T>
 void SafeAddRef(T& t)
@@ -160,12 +150,12 @@ int main(int argc, char **argv)
 
 	auto id1 = manager->Play(streamSound);
 	manager->FadeIn(id1, 3);
-	Sleep_(1000);
+	Sleep(1000);
 	auto id2 = manager->Play(staticSound);
 	
 	while (manager->IsPlaying(id1) || manager->IsPlaying(id2))
 	{
-		Sleep_(1);
+		Sleep(1);
 	}
 
 	/*

@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <float.h>
+#include <thread>
 
 namespace osm
 {

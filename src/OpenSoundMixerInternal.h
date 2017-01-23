@@ -14,11 +14,8 @@
 #define NOMINMAX
 #include <algorithm>
 
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h>
-#endif
+#include <chrono>
+#include <thread>
 
 #if _WIN32
 #define	STRICMP _stricmp
@@ -120,16 +117,10 @@ namespace osm
 		return t;
 	}
 
-#ifdef _WIN32
 	inline void Sleep(int32_t ms)
 	{
-		::Sleep(ms);
+		std::chrono::milliseconds d(ms);
+		std::this_thread::sleep_for(d);
 	}
-#else
-	inline void Sleep(int32_t ms)
-	{
-		usleep(1000 * ms);
-	}
-#endif
 }
 

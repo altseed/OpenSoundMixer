@@ -94,7 +94,8 @@ endif()
 include_directories(
 	src/
 	src/3rdParty/libogg/include/
-	src/3rdParty/libvorbis/include/)
+	src/3rdParty/libvorbis/include/
+	src/3rdParty/libvorbis/src/)
 # 
 
 link_directories(

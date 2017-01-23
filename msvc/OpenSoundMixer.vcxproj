@@ -83,7 +83,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\src\3rdParty\libogg\include;..\src\3rdParty\libvorbis\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -96,7 +97,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\src\3rdParty\libogg\include;..\src\3rdParty\libvorbis\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -111,7 +113,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\src\3rdParty\libogg\include;..\src\3rdParty\libvorbis\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +131,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>..\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\src\3rdParty\libogg\include;..\src\3rdParty\libvorbis\include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -138,6 +142,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\3rdParty\libogg\src\bitwise.c" />
+    <ClCompile Include="..\src\3rdParty\libogg\src\framing.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\analysis.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\bitrate.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\block.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\codebook.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\envelope.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\floor0.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\floor1.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\info.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lookup.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lpc.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lsp.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\mapping0.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\mdct.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\psy.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\registry.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\res0.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\sharedbook.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\smallft.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\synthesis.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\vorbisenc.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\vorbisfile.c" />
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\window.c" />
     <ClCompile Include="..\src\Decorder\osm.OggDecorder.cpp" />
     <ClCompile Include="..\src\Decorder\osm.WaveDecorder.cpp" />
     <ClCompile Include="..\src\Filter\osm.Panner.cpp" />

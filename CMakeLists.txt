@@ -32,6 +32,32 @@ set(common_src
 	src/Decorder/osm.WaveDecorder.cpp
 	src/Filter/osm.Resampler.cpp
 	src/Filter/osm.Panner.cpp
+
+	src/3rdParty/libogg/src/bitwise.c
+	src/3rdParty/libogg/src/framing.c
+	src/3rdParty/libvorbis/src/analysis.c
+	src/3rdParty/libvorbis/src/bitrate.c
+	src/3rdParty/libvorbis/src/block.c
+	src/3rdParty/libvorbis/src/codebook.c
+	src/3rdParty/libvorbis/src/envelope.c
+	src/3rdParty/libvorbis/src/floor0.c
+	src/3rdParty/libvorbis/src/floor1.c
+	src/3rdParty/libvorbis/src/info.c
+	src/3rdParty/libvorbis/src/lookup.c
+	src/3rdParty/libvorbis/src/lpc.c
+	src/3rdParty/libvorbis/src/lsp.c
+	src/3rdParty/libvorbis/src/mapping0.c
+	src/3rdParty/libvorbis/src/mdct.c
+	src/3rdParty/libvorbis/src/psy.c
+	src/3rdParty/libvorbis/src/registry.c
+	src/3rdParty/libvorbis/src/res0.c
+	src/3rdParty/libvorbis/src/sharedbook.c
+	src/3rdParty/libvorbis/src/smallft.c
+	src/3rdParty/libvorbis/src/synthesis.c
+	src/3rdParty/libvorbis/src/vorbisenc.c
+	src/3rdParty/libvorbis/src/vorbisfile.c
+	src/3rdParty/libvorbis/src/window.c
+
 	)
 
 set(xaudio2_src
@@ -87,8 +113,6 @@ if (MSVC)
 
 else()
 	list(APPEND common_lib dl )
-	list(APPEND common_lib ogg )
-	list(APPEND common_lib vorbisfile )
 	list(APPEND common_lib OpenSoundMixer )
 
 	if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")

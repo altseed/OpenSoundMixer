@@ -24,6 +24,78 @@
     <ClCompile Include="..\src\Filter\osm.Panner.cpp">
       <Filter>Filter</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libogg\src\bitwise.c">
+      <Filter>3rdParty\libogg\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libogg\src\framing.c">
+      <Filter>3rdParty\libogg\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\analysis.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\bitrate.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\block.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\codebook.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\envelope.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\floor0.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\floor1.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\info.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lookup.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lpc.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\lsp.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\mapping0.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\mdct.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\psy.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\registry.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\res0.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\sharedbook.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\smallft.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\synthesis.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\vorbisenc.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\vorbisfile.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\3rdParty\libvorbis\src\window.c">
+      <Filter>3rdParty\libvorbis\src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\OpenSoundMixer.h" />
@@ -60,6 +132,21 @@
     </Filter>
     <Filter Include="Filter">
       <UniqueIdentifier>{df306bb8-3fe5-40c3-89ca-6bc8cce2bbd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty">
+      <UniqueIdentifier>{236f7d44-f526-4bf0-a543-f58ebf603101}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\libogg">
+      <UniqueIdentifier>{519d7228-3503-477d-a384-f0b3f0b273b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\libogg\src">
+      <UniqueIdentifier>{730a60c7-fe75-4602-a684-558c84397e63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\libvorbis">
+      <UniqueIdentifier>{39caf640-8dc1-4fc6-afae-076fe7596e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="3rdParty\libvorbis\src">
+      <UniqueIdentifier>{a2150e00-f928-4563-93d9-23469c691252}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -1,10 +1,16 @@
 ﻿OpenSoundMixer
 ==============
-マルチプラットフォームなサウンドミキサーです。
 
-テストに使用している音は　takumi kato 様が作成しました。
+This is a sound mixer for multiplatforms.
 
-LinuxでのコンパイルにはPulseAudioのヘッダーファイルを必要とします。
+The sound for test is made by takumi kato.
+
+This project includes the following projects.
+
+* libogg-1.3.2
+* libvorbis-1.3.5
+
+When it compile on Linux, this project requires PulseAudio.
 
 ## Windows
 * Xaudio2

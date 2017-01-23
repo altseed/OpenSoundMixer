@@ -92,9 +92,9 @@ endif()
 
 # インクルードの設定
 include_directories(
-	include/
 	src/
-	)
+	src/3rdParty/libogg/include/
+	src/3rdParty/libvorbis/include/)
 # 
 
 link_directories(

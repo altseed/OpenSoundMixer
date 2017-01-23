@@ -161,6 +161,7 @@ namespace osm
 				if (s.second.SamplePos >= s.second.SoundPtr->GetSampleCount())
 				{
 					m_tempIDs.push_back(s.first);
+					SafeRelease(s.second.SoundPtr);
 				}
 			}
 

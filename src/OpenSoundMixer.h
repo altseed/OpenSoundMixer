@@ -18,6 +18,11 @@ namespace osm
 	class IReference
 	{
 	public:
+
+		IReference() {}
+
+		virtual ~IReference() {}
+
 		/**
 		@brief	参照カウンタを加算する。
 		@return	加算後の参照カウンタ

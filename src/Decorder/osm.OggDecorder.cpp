@@ -132,6 +132,13 @@ namespace osm
 
 	int32_t OggDecorder::GetSamples(Sample* samples, int32_t offset, int32_t count)
 	{
+		const int32_t shrink_threshold = 1024 * 128;
+
+		int32_t sampleSize = 2 * m_original.ChannelCount;
+
+		// To avoid to reallocate.
+		m_original.Samples.reserve(count * sampleSize);
+
 		auto e2iSample = [this](int32_t e) -> double
 		{
 			return ((double) e / 44100.0) * (double) m_original.SamplePerSec;
@@ -145,8 +152,6 @@ namespace osm
 
 		sampleStart_i = sampleStart_i >= m_original.TotalSample ? m_original.TotalSample : sampleStart_i;
 		sampleEnd_i = sampleEnd_i >= m_original.TotalSample ? m_original.TotalSample : sampleEnd_i;
-
-		int32_t sampleSize = 2 * m_original.ChannelCount;
 
 		// 巻き戻しor大幅スキップ
 		if (m_original.CurrentSample > sampleStart_i || sampleStart_i - m_original.CurrentSample > 44100 / 5)
@@ -203,7 +208,12 @@ namespace osm
 				// 使用済み削除
 				m_original.CurrentSample = sampleEnd_i;
 				m_original.Samples.clear();
-
+				
+				// Shrink memory
+				if (m_original.Samples.capacity() > shrink_threshold)
+				{
+					m_original.Samples.shrink_to_fit();
+				}
 				return i;
 			}
 			else if (sampleR >= sampleCount - 1)
@@ -224,6 +234,12 @@ namespace osm
 				// 使用済み削除
 				m_original.CurrentSample = sampleEnd_i;
 				m_original.Samples.clear();
+
+				// Shrink memory
+				if (m_original.Samples.capacity() > shrink_threshold)
+				{
+					m_original.Samples.shrink_to_fit();
+				}
 
 				return i + 1;
 			}
@@ -252,6 +268,12 @@ namespace osm
 		auto removingSize = (sampleEnd_i - 1 - m_original.CurrentSample) * sampleSize;
 		m_original.Samples.erase(m_original.Samples.begin(), m_original.Samples.begin() + removingSize);
 		m_original.CurrentSample = sampleEnd_i - 1;
+
+		// Shrink memory
+		if (m_original.Samples.capacity() > shrink_threshold)
+		{
+			m_original.Samples.shrink_to_fit();
+		}
 
 		return count;
 	}

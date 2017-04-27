@@ -30,7 +30,7 @@ namespace osm
 		Sound_Impl();
 		virtual ~Sound_Impl();
 
-		bool Load(void* data, int32_t size, bool isDecompressed);
+		bool Load(const void* data, int32_t size, bool isDecompressed);
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);
 		int32_t GetSampleCount() const;
 

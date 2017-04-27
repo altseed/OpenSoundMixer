@@ -47,13 +47,26 @@ namespace osm
 			uint16_t	BitsPerSample;
 		};
 
+		WAVEFormat fmt;
+
+		int32_t bufferDataSize = 0;
+
 		static bool Read(void* dst, void* src, int copySize, int& offset, int dataSize);
 
 	public:
 		WaveDecorder();
 		virtual ~WaveDecorder();
+		bool LoadHeader(uint8_t* data, int32_t size) override;
 		bool Load(uint8_t* data, int32_t size) override;
+
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) override;
+
+		bool GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size);
+
 		int32_t GetSampleCount() override;
+
+		int32_t GetChannelCount() const override;
+
+		int32_t GetRate() const override;
 	};
 }

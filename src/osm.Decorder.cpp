@@ -3,7 +3,7 @@
 
 namespace osm
 {
-	eFileType Decorder::GetFileType(void* data, int32_t size)
+	eFileType Decorder::GetFileType(const void* data, int32_t size)
 	{
 		if (size < 4) return eFileType::Unknown;
 

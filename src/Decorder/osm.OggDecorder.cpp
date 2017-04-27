@@ -5,6 +5,13 @@
 
 namespace osm
 {
+	OggBuffer::OggBuffer()
+		: m_data(nullptr)
+		, m_size(0)
+	{
+
+	}
+
 	OggBuffer::OggBuffer(uint8_t* data, int32_t size)
 		: m_data(data)
 		, m_size(size)
@@ -96,9 +103,9 @@ namespace osm
 		}
 	}
 
-	bool OggDecorder::Load(uint8_t* data, int32_t size)
+	bool OggDecorder::LoadHeader(uint8_t* data, int32_t size)
 	{
-		m_oggBuffer = std::make_shared<OggBuffer>(data, size);
+		m_oggBuffer = OggBuffer(data, size);
 
 		ov_callbacks callbacks =
 		{
@@ -108,7 +115,41 @@ namespace osm
 			&OggBuffer::tell
 		};
 
-		if (ov_open_callbacks(m_oggBuffer.get(), &m_ovf, 0, 0, callbacks) != 0)
+		if (ov_open_callbacks(&m_oggBuffer, &m_ovf, 0, 0, callbacks) != 0)
+		{
+			return false;
+		}
+
+		if (ov_seekable(&m_ovf) == 0)
+		{
+			ov_clear(&m_ovf);
+			return false;
+		}
+
+		auto info = ov_info(&m_ovf, -1);
+
+		m_original.SamplePerSec = info->rate;
+		m_original.ChannelCount = info->channels;
+
+		m_original.TotalSample = ov_pcm_total(&m_ovf, -1);
+		m_loaded = true;
+
+		return true;
+	}
+
+	bool OggDecorder::Load(uint8_t* data, int32_t size)
+	{
+		m_oggBuffer = OggBuffer(data, size);
+
+		ov_callbacks callbacks =
+		{
+			&OggBuffer::read,
+			&OggBuffer::seek,
+			&OggBuffer::close,
+			&OggBuffer::tell
+		};
+
+		if (ov_open_callbacks(&m_oggBuffer, &m_ovf, 0, 0, callbacks) != 0)
 		{
 			return false;
 		}
@@ -278,10 +319,25 @@ namespace osm
 		return count;
 	}
 
+	bool OggDecorder::GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size)
+	{
+		return false;
+	}
+
 	int32_t OggDecorder::GetSampleCount()
 	{
 		auto frameCount = (double) m_original.TotalSample / (double) m_original.SamplePerSec * 44100.0;
 
 		return (int32_t) frameCount;
+	}
+
+	int32_t OggDecorder::GetChannelCount() const
+	{
+		return m_original.ChannelCount;
+	}
+
+	int32_t OggDecorder::GetRate() const
+	{
+		return m_original.SamplePerSec;
 	}
 }

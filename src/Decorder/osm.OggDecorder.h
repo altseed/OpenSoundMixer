@@ -21,6 +21,7 @@ namespace osm
 		int32_t		m_current = 0;
 
 	public:
+		OggBuffer();
 		OggBuffer(uint8_t* data, int32_t size);
 		static size_t read(void* buffer, size_t size, size_t maxCount, void* stream);
 		static int seek(void* buffer, ogg_int64_t offset, int flag);
@@ -32,7 +33,7 @@ namespace osm
 		: public Decorder
 	{
 	private:
-		std::shared_ptr<OggBuffer>	m_oggBuffer;
+		OggBuffer					m_oggBuffer;
 		OggVorbis_File				m_ovf;
 		bool						m_loaded = false;
 
@@ -48,8 +49,18 @@ namespace osm
 	public:
 		OggDecorder();
 		virtual ~OggDecorder();
+
+		bool LoadHeader(uint8_t* data, int32_t size) override;
+
 		bool Load(uint8_t* data, int32_t size) override;
 		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) override;
+
+		bool GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size) override;
+
 		int32_t GetSampleCount() override;
+
+		int32_t GetChannelCount() const override;
+
+		int32_t GetRate() const override;
 	};
 }

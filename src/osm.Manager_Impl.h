@@ -71,7 +71,7 @@ namespace osm
 
 		void Finalize() override;
 
-		Sound* CreateSound(void* data, int32_t size, bool isDecompressed) override;
+		Sound* CreateSound(const void* data, int32_t size, bool isDecompressed) override;
 
 		int32_t Play(Sound* sound) override;
 	

@@ -200,7 +200,7 @@ namespace osm
 		StopAll();
 	}
 
-	Sound* Manager_Impl::CreateSound(void* data, int32_t size, bool isDecompressed)
+	Sound* Manager_Impl::CreateSound(const void* data, int32_t size, bool isDecompressed)
 	{
 		auto sound = new Sound_Impl();
 		if(!sound->Load( data, size, isDecompressed))

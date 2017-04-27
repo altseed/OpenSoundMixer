@@ -154,10 +154,73 @@ namespace osm
 
 	}
 
+	bool WaveDecorder::LoadHeader(uint8_t* data, int32_t size)
+	{
+		int32_t offset = 0;
+
+		bool isPCM = false;
+
+		char riff[4];
+		if (!Read(riff, data, 4, offset, size)) return false;
+
+		int32_t riffSize = 0;
+		if (!Read(&riffSize, data, sizeof(int32_t), offset, size)) return false;
+
+		char wave[4];
+		if (!Read(wave, data, 4, offset, size)) return false;
+
+		while (true)
+		{
+			char chunk[5];
+			chunk[4] = 0;
+			if (!Read(chunk, data, 4, offset, size)) break;
+
+			int32_t chunkSize = 0;
+
+			if (STRICMP("fmt ", chunk) == 0)
+			{
+				// チャンクサイズ
+				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+
+				// フォーマット
+				if (!Read(&fmt, data, 16, offset, size)) return false;
+				offset += (chunkSize - 16);
+
+				if (fmt.FormatID == 1)
+				{
+					// PCMの場合
+					isPCM = true;
+				}
+				else
+				{
+					// それ以外
+					return false;
+				}
+			}
+			else if (STRICMP("data", chunk) == 0)
+			{
+				// チャンクサイズ
+				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+				bufferDataSize = chunkSize;
+
+				offset += chunkSize;
+			}
+			else
+			{
+				// チャンクサイズ
+				if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+
+				// 不明
+				offset += chunkSize;
+			}
+		}
+
+		return isPCM && bufferDataSize > 0;
+	}
+
 	bool WaveDecorder::Load(uint8_t* data, int32_t size)
 	{
 		int32_t offset = 0;
-		WAVEFormat fmt;
 
 		char riff[4];
 		if (!Read(riff, data, 4, offset, size)) return false;
@@ -273,8 +336,63 @@ namespace osm
 		return count;
 	}
 
+	bool WaveDecorder::GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size)
+	{
+		if (count != GetSampleCount()) return false;
+
+		if (GetChannelCount() == 2 && GetRate() == 44100)
+		{
+			// Read rapidly
+			int32_t offset = 0;
+
+			char riff[4];
+			if (!Read(riff, data, 4, offset, size)) return false;
+
+			int32_t riffSize = 0;
+			if (!Read(&riffSize, data, sizeof(int32_t), offset, size)) return false;
+
+			char wave[4];
+			if (!Read(wave, data, 4, offset, size)) return false;
+
+			while (true)
+			{
+				char chunk[5];
+				chunk[4] = 0;
+				if (!Read(chunk, data, 4, offset, size)) break;
+
+				int32_t chunkSize = 0;
+
+				if (STRICMP("data", chunk) == 0)
+				{
+					// チャンクサイズ
+					if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
+
+					assert(sizeof(Sample) * count == chunkSize);
+					memcpy(samples, data + offset, chunkSize);
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+
 	int32_t WaveDecorder::GetSampleCount()
 	{
-		return m_pcm->GetSampleCountAs44100Stereo16bit();
+		int32_t frameByte = fmt.ChannelCount * (fmt.BitsPerSample / 8);
+
+		auto len = (double)bufferDataSize / (double)frameByte / (double)fmt.SamplesPerSec;
+
+		return (int32_t)(len * 44100);
+	}
+
+	int32_t WaveDecorder::GetChannelCount() const
+	{
+		return fmt.ChannelCount;
+	}
+
+	int32_t WaveDecorder::GetRate() const
+	{
+		return (int32_t)fmt.SamplesPerSec;
 	}
 }

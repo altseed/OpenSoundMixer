@@ -77,7 +77,7 @@ namespace osm
 
 		virtual void Finalize() = 0;
 
-		virtual Sound* CreateSound(void* data, int32_t size, bool isDecompressed) = 0;
+		virtual Sound* CreateSound(const void* data, int32_t size, bool isDecompressed) = 0;
 
 		virtual int32_t Play(Sound* sound) = 0;
 

@@ -18,13 +18,10 @@ namespace osm
 	{
 	}
 
-	bool Sound_Impl::Load(void* data, int32_t size, bool isDecompressed)
+	bool Sound_Impl::Load(const void* data, int32_t size, bool isDecompressed)
 	{
 		if (data == nullptr) return false;
 		if (size <= 0) return false;
-
-		m_data.resize(size);
-		memcpy(m_data.data(), data, size);
 
 		auto type = Decorder::GetFileType(data, size);
 
@@ -37,23 +34,38 @@ namespace osm
 			m_decorder = std::make_shared<WaveDecorder>();
 		}
 
-		auto loaded = m_decorder->Load((uint8_t*) m_data.data(), size);
+		auto loaded = m_decorder->LoadHeader((uint8_t*)data, size);
 		if (!loaded) return false;
 
 		if (isDecompressed)
 		{
 			m_samples.resize(m_decorder->GetSampleCount());
-			auto count = m_decorder->GetSamples(m_samples.data(), 0, m_samples.size());
-			assert(m_samples.size() == count);
 
-			m_decorder.reset();
-			m_data.resize(0);
-			m_data.shrink_to_fit();
+			if (m_decorder->GetAllSamples(m_samples.data(), m_samples.size(), (uint8_t*)data, size))
+			{
+
+			}
+			else
+			{
+				auto loaded = m_decorder->Load((uint8_t*)data, size);
+				if (!loaded) return false;
+
+				auto count = m_decorder->GetSamples(m_samples.data(), 0, m_samples.size());
+				assert(m_samples.size() == count);
+
+				m_decorder.reset();
+			}
 
 			m_isDecompressed = true;
 		}
 		else
 		{
+			m_data.resize(size);
+			memcpy(m_data.data(), data, size);
+
+			auto loaded = m_decorder->Load(m_data.data(), size);
+			if (!loaded) return false;
+
 			m_isDecompressed = false;
 		}
 

@@ -234,76 +234,151 @@ namespace osm
 		auto data = (int16_t*)m_original.Samples.data();
 		auto sampleCount = m_original.Samples.size() / sampleSize;
 		
-		for (int32_t i = 0; i < count; i++)
+		if (GetRate() == 44100)
 		{
-			auto sample = e2iSample(offset + i) - m_original.CurrentSample;
-			auto sampleR = (int32_t) sample;
-			auto sampleD = sample - sampleR;
-
-			int16_t left1, left2, right1, right2;
-
-			if (sampleR >= sampleCount)
+			for (int32_t i = 0; i < count; i++)
 			{
-				m_original.CurrentSample += i;
+				auto sample = (offset + i) - m_original.CurrentSample;
+				auto sampleR = (int32_t)sample;
 
-				// 使用済み削除
-				m_original.CurrentSample = sampleEnd_i;
-				m_original.Samples.clear();
-				
-				// Shrink memory
-				if (m_original.Samples.capacity() > shrink_threshold)
+				int16_t left1, left2, right1, right2;
+
+				if (sampleR >= sampleCount)
 				{
-					m_original.Samples.shrink_to_fit();
+					m_original.CurrentSample += i;
+
+					// 使用済み削除
+					m_original.CurrentSample = sampleEnd_i;
+					m_original.Samples.clear();
+
+					// Shrink memory
+					if (m_original.Samples.capacity() > shrink_threshold)
+					{
+						m_original.Samples.shrink_to_fit();
+					}
+					return i;
 				}
-				return i;
-			}
-			else if (sampleR >= sampleCount - 1)
-			{
-				left1 = data[sampleR * m_original.ChannelCount + 0];
-				if (m_original.ChannelCount == 2)
+				else if (sampleR >= sampleCount - 1)
 				{
-					right1 = data[sampleR * m_original.ChannelCount + 1];
+					left1 = data[sampleR * m_original.ChannelCount + 0];
+					if (m_original.ChannelCount == 2)
+					{
+						right1 = data[sampleR * m_original.ChannelCount + 1];
+					}
+					else
+					{
+						right1 = left1;
+					}
+
+					samples[i].Left = left1;
+					samples[i].Right = right1;
+
+					// 使用済み削除
+					m_original.CurrentSample = sampleEnd_i;
+					m_original.Samples.clear();
+
+					// Shrink memory
+					if (m_original.Samples.capacity() > shrink_threshold)
+					{
+						m_original.Samples.shrink_to_fit();
+					}
+
+					return i + 1;
 				}
 				else
 				{
-					right1 = left1;
+					left1 = data[sampleR * m_original.ChannelCount + 0];
+
+					if (m_original.ChannelCount == 2)
+					{
+						right1 = data[sampleR * m_original.ChannelCount + 1];
+					}
+					else
+					{
+						right1 = left1;
+					}
+
+					samples[i].Left = left1;
+					samples[i].Right = right1;
 				}
-
-				samples[i].Left = left1 * (1.0 - sampleD);
-				samples[i].Right = right1 * (1.0 - sampleD);
-
-				// 使用済み削除
-				m_original.CurrentSample = sampleEnd_i;
-				m_original.Samples.clear();
-
-				// Shrink memory
-				if (m_original.Samples.capacity() > shrink_threshold)
-				{
-					m_original.Samples.shrink_to_fit();
-				}
-
-				return i + 1;
-			}
-			else
-			{
-				left1 = data[sampleR * m_original.ChannelCount + 0];
-				left2 = data[(sampleR + 1) * m_original.ChannelCount + 0];
-
-				if (m_original.ChannelCount == 2)
-				{
-					right1 = data[sampleR * m_original.ChannelCount + 1];
-					right2 = data[(sampleR + 1) * m_original.ChannelCount + 1];
-				}
-				else
-				{
-					right1 = left1;
-					right2 = left2;
-				}
-
-				samples[i].Left = left1 * (1.0 - sampleD) + left2 * (sampleD);
-				samples[i].Right = right1 * (1.0 - sampleD) + right2 * (sampleD);
 			}
 		}
+		else
+		{
+			// Convert into 44100 stereo.
+			for (int32_t i = 0; i < count; i++)
+			{
+				auto sample = e2iSample(offset + i) - m_original.CurrentSample;
+				auto sampleR = (int32_t)sample;
+				auto sampleD = sample - sampleR;
+
+				int16_t left1, left2, right1, right2;
+
+				if (sampleR >= sampleCount)
+				{
+					m_original.CurrentSample += i;
+
+					// 使用済み削除
+					m_original.CurrentSample = sampleEnd_i;
+					m_original.Samples.clear();
+
+					// Shrink memory
+					if (m_original.Samples.capacity() > shrink_threshold)
+					{
+						m_original.Samples.shrink_to_fit();
+					}
+					return i;
+				}
+				else if (sampleR >= sampleCount - 1)
+				{
+					left1 = data[sampleR * m_original.ChannelCount + 0];
+					if (m_original.ChannelCount == 2)
+					{
+						right1 = data[sampleR * m_original.ChannelCount + 1];
+					}
+					else
+					{
+						right1 = left1;
+					}
+
+					samples[i].Left = left1 * (1.0 - sampleD);
+					samples[i].Right = right1 * (1.0 - sampleD);
+
+					// 使用済み削除
+					m_original.CurrentSample = sampleEnd_i;
+					m_original.Samples.clear();
+
+					// Shrink memory
+					if (m_original.Samples.capacity() > shrink_threshold)
+					{
+						m_original.Samples.shrink_to_fit();
+					}
+
+					return i + 1;
+				}
+				else
+				{
+					left1 = data[sampleR * m_original.ChannelCount + 0];
+					left2 = data[(sampleR + 1) * m_original.ChannelCount + 0];
+
+					if (m_original.ChannelCount == 2)
+					{
+						right1 = data[sampleR * m_original.ChannelCount + 1];
+						right2 = data[(sampleR + 1) * m_original.ChannelCount + 1];
+					}
+					else
+					{
+						right1 = left1;
+						right2 = left2;
+					}
+
+					samples[i].Left = left1 * (1.0 - sampleD) + left2 * (sampleD);
+					samples[i].Right = right1 * (1.0 - sampleD) + right2 * (sampleD);
+				}
+			}
+		}
+
+
 
 		// 使用済み削除
 		auto removingSize = (sampleEnd_i - 1 - m_original.CurrentSample) * sampleSize;

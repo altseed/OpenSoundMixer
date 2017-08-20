@@ -367,8 +367,10 @@ namespace osm
 					// チャンクサイズ
 					if (!Read(&chunkSize, data, sizeof(int32_t), offset, size)) return false;
 
-					assert(sizeof(Sample) * count == chunkSize);
-					memcpy(samples, data + offset, chunkSize);
+					// chunkSize is not always same with data size
+					assert(sizeof(Sample) * count <= chunkSize);
+
+					memcpy(samples, data + offset, sizeof(Sample) * count);
 					return true;
 				}
 			}

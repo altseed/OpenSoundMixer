@@ -135,6 +135,8 @@ namespace osm
 	bool WaveDecorder::Read(void* dst, void* src, int copySize, int& offset, int dataSize)
 	{
 		if (offset + copySize > dataSize) return false;
+		if (offset < 0) return false;
+
 		uint8_t* s = (uint8_t*) src + offset;
 
 		memcpy(dst, s, copySize);
@@ -171,6 +173,9 @@ namespace osm
 
 		while (true)
 		{
+			// A file has a noize data.
+			if (offset < 0) break;
+
 			char chunk[5];
 			chunk[4] = 0;
 			if (!Read(chunk, data, 4, offset, size)) break;

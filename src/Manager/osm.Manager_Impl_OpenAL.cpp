@@ -1,12 +1,13 @@
-﻿
+
 #include "osm.Manager_Impl_OpenAL.h"
+#include <iostream>
 
 namespace osm
 {
 	static const ALenum format = AL_FORMAT_STEREO16;
 	static const ALsizei freq  = 44100;
 
-	static const size_t queueSize      = 4;
+	static const size_t queueSize      = 8;
 	static const size_t bufferDivision = 100;
 	static const size_t bufferSize     = freq / bufferDivision;
 	static const size_t bufferBytes    = sizeof(Sample) * bufferSize;
@@ -50,22 +51,23 @@ namespace osm
 	{
 		Sample bufs[queueSize][bufferSize];
 		int32_t targetBuf = 0;
-
+        
 		while (m_threading)
 		{
-			// バッファにデータを読み込みソースに追加
-			ALint queue;
-			alGetSourceiv(m_source, AL_BUFFERS_QUEUED, &queue);
-			if (!queue) {
-				for (auto b : m_buffers) {
-					auto sampleCount = ReadSamples(bufs[targetBuf], bufferSize);
-					auto sampleBytes = sampleCount * sizeof(Sample);
-
-					alBufferData(b, format, bufs[targetBuf], sampleBytes, freq);
-					alSourceQueueBuffers(m_source, 1, &b);
-					targetBuf = (targetBuf + 1) % 4;
-				}
-			}
+            // バッファにデータを読み込みソースに追加
+            ALint queue;
+            alGetSourceiv(m_source, AL_BUFFERS_QUEUED, &queue);
+            
+            if (!queue) {
+                for (auto b : m_buffers) {
+                    auto sampleCount = ReadSamples(bufs[targetBuf], bufferSize);
+                    auto sampleBytes = sampleCount * sizeof(Sample);
+                    
+                    alBufferData(b, format, bufs[targetBuf], sampleBytes, freq);
+                    alSourceQueueBuffers(m_source, 1, &b);
+                    targetBuf = (targetBuf + 1) % queueSize;
+                }
+            }
 
 			// 再生状態にする
 			ALint state;
@@ -78,6 +80,9 @@ namespace osm
 			// 再生終了したバッファにデータを読み込み
 			ALint processed;
 			alGetSourceiv(m_source, AL_BUFFERS_PROCESSED, &processed);
+            
+            //std::cout << "f " << state << " " << queue << " " << processed << std::endl;
+            
 			while (processed > 0)
 			{
 				ALuint unqueued;
@@ -88,11 +93,11 @@ namespace osm
 
 				alBufferData(unqueued, format, bufs[targetBuf], sampleBytes, freq);
 				alSourceQueueBuffers(m_source, 1, &unqueued);
-				targetBuf = (targetBuf + 1) % 4;
+				targetBuf = (targetBuf + 1) % queueSize;
 				--processed;
 			}
 
-			Sleep(10);
+			Sleep(1);
 		}
 
 		// 終わりまで待つ
@@ -114,7 +119,7 @@ namespace osm
 				--processed;
 			}
 
-			Sleep(2);
+			Sleep(1);
 		}
 	}
 

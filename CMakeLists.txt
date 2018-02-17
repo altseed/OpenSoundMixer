@@ -6,6 +6,7 @@ project(OpenSoundMixer)
 
 #
 option(BUILD_TEST "Build test" OFF)
+option(XAUDIO2 "Enabled EAudio2" OFF)
 
 # CMake バージョンチェック
 if (MSVC)
@@ -63,6 +64,9 @@ set(common_src
 set(xaudio2_src
 	src/Manager/osm.Manager_Impl_XAudio2.cpp)
 
+set(wasapi_src
+	src/Manager/osm.Manager_Impl_WasApi.cpp)
+
 set(pulse_audio_src
 	src/Manager/osm.Manager_Impl_PulseAudio.cpp)
 
@@ -75,8 +79,17 @@ if (BUILD_TEST)
 endif()
 
 if(WIN32)
-	list(APPEND common_src
-		${xaudio2_src})
+
+	if(XAUDIO2)
+		list(APPEND common_src
+			${xaudio2_src})
+		add_definitions(-DOSM_OUTPUT_XAUDIO2)
+	else()
+		list(APPEND common_src
+			${wasapi_src})
+		add_definitions(-DOSM_OUTPUT_WASAPI)
+	endif()
+
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	list(APPEND common_src
 		${open_al_src})

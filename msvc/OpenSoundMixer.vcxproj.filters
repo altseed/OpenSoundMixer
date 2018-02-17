@@ -11,9 +11,6 @@
     <ClCompile Include="..\src\Decorder\osm.WaveDecorder.cpp">
       <Filter>Decorder</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Manager\osm.Manager_Impl_XAudio2.cpp">
-      <Filter>Manager</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Manager\osm.Manager_Impl_PulseAudio.cpp">
       <Filter>Manager</Filter>
     </ClCompile>
@@ -96,6 +93,12 @@
     <ClCompile Include="..\src\3rdParty\libvorbis\src\window.c">
       <Filter>3rdParty\libvorbis\src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Manager\osm.Manager_Impl_WasApi.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Manager\osm.Manager_Impl_XAudio2.cpp">
+      <Filter>Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\OpenSoundMixer.h" />
@@ -109,9 +112,6 @@
     <ClInclude Include="..\src\Decorder\osm.WaveDecorder.h">
       <Filter>Decorder</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Manager\osm.Manager_Impl_XAudio2.h">
-      <Filter>Manager</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Manager\osm.Manager_Impl_PulseAudio.h">
       <Filter>Manager</Filter>
     </ClInclude>
@@ -121,6 +121,12 @@
     </ClInclude>
     <ClInclude Include="..\src\Filter\osm.Panner.h">
       <Filter>Filter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Manager\osm.Manager_Impl_WasApi.h">
+      <Filter>Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Manager\osm.Manager_Impl_XAudio2.h">
+      <Filter>Manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

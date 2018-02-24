@@ -84,7 +84,7 @@ namespace osm
 	{
 		HRESULT hr;
 
-		hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		hr = ::CoInitialize(NULL);
 
 		initializingCo = SUCCEEDED(hr);
 

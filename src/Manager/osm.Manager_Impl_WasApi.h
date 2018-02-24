@@ -27,6 +27,8 @@ namespace osm
 		volatile bool			m_threading;
 		std::thread				m_thread;
 
+		bool					initializingCo = false;
+
 		void Reset();
 
 		static void ThreadFunc(void* p);

@@ -84,7 +84,9 @@ namespace osm
 	{
 		HRESULT hr;
 
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
+		hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+		initializingCo = SUCCEEDED(hr);
 
 		// Get the audio endpoint device enumerator.
 		hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL,
@@ -158,6 +160,10 @@ namespace osm
 	void Manager_Impl_WasApi::FinalizeInternal()
 	{
 		Reset();
-		::CoUninitialize();
+
+		if (initializingCo)
+		{
+			::CoUninitialize();
+		}
 	}
 }

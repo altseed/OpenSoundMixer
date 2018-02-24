@@ -37,6 +37,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2130122C-7920-4984-8431-897B2C96B839}</ProjectGuid>
     <RootNamespace>OpenSoundMixer</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -123,7 +124,7 @@
     <OutDir>$(SolutionDir)lib\x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug WasApi|Win32'">
-    <OutDir>$(SolutionDir)lib\x86\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)lib\x86\Debug\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)lib\x64\$(Configuration)\</OutDir>
@@ -135,7 +136,7 @@
     <OutDir>$(SolutionDir)lib\x86\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release WasApi|Win32'">
-    <OutDir>$(SolutionDir)lib\x86\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)lib\x86\Release\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)lib\x64\$(Configuration)\</OutDir>

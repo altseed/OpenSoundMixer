@@ -161,6 +161,8 @@ namespace osm
 	{
 		Reset();
 
+		SafeRelease(m_context);
+
 		if (initializingCo)
 		{
 			::CoUninitialize();

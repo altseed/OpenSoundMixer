@@ -22,44 +22,21 @@ else()
 	set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC" ${CMAKE_CXX_FLAGS})
 endif()
 
-# ソースコード設定
-set(common_src
-	src/osm.Decorder.cpp
-	src/osm.Manager.cpp
-	src/osm.Manager_Impl.cpp
-	src/osm.ReferenceObject.cpp
-	src/osm.Sound_Impl.cpp
-	src/Decorder/osm.OggDecorder.cpp
-	src/Decorder/osm.WaveDecorder.cpp
-	src/Filter/osm.Resampler.cpp
-	src/Filter/osm.Panner.cpp
+# Add codes
 
-	src/3rdParty/libogg/src/bitwise.c
-	src/3rdParty/libogg/src/framing.c
-	src/3rdParty/libvorbis/src/analysis.c
-	src/3rdParty/libvorbis/src/bitrate.c
-	src/3rdParty/libvorbis/src/block.c
-	src/3rdParty/libvorbis/src/codebook.c
-	src/3rdParty/libvorbis/src/envelope.c
-	src/3rdParty/libvorbis/src/floor0.c
-	src/3rdParty/libvorbis/src/floor1.c
-	src/3rdParty/libvorbis/src/info.c
-	src/3rdParty/libvorbis/src/lookup.c
-	src/3rdParty/libvorbis/src/lpc.c
-	src/3rdParty/libvorbis/src/lsp.c
-	src/3rdParty/libvorbis/src/mapping0.c
-	src/3rdParty/libvorbis/src/mdct.c
-	src/3rdParty/libvorbis/src/psy.c
-	src/3rdParty/libvorbis/src/registry.c
-	src/3rdParty/libvorbis/src/res0.c
-	src/3rdParty/libvorbis/src/sharedbook.c
-	src/3rdParty/libvorbis/src/smallft.c
-	src/3rdParty/libvorbis/src/synthesis.c
-	src/3rdParty/libvorbis/src/vorbisenc.c
-	src/3rdParty/libvorbis/src/vorbisfile.c
-	src/3rdParty/libvorbis/src/window.c
+file(GLOB_RECURSE common_src
+        src/3rdParty/*.c
+        src/3rdParty/*.h
+	src/Decorder/*.h
+        src/Decorder/*.cpp
+        src/Filter/*.h
+        src/Filter/*.cpp)
 
-	)
+file(GLOB common_root_src
+        src/*.h
+	src/*.cpp)
+
+list(APPEND common_src ${common_root_src})
 
 set(xaudio2_src
 	src/Manager/osm.Manager_Impl_XAudio2.cpp)
@@ -75,7 +52,7 @@ set(open_al_src
 
 if (BUILD_TEST)
 	set(test_src
-		src_test/main.cpp)
+		/src_test/main.cpp)
 endif()
 
 if(WIN32)
@@ -102,6 +79,29 @@ if (BUILD_TEST)
 	list(APPEND test_src
 		${common_src})
 endif()
+
+foreach(FILE ${common_src}) 
+    # Get the directory of the source file
+    get_filename_component(PARENT_DIR "${FILE}" DIRECTORY)
+
+    # Remove common directory prefix to make the group
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" GROUP "${PARENT_DIR}")
+
+    # Make sure we are using windows slashes
+    string(REPLACE "/" "\\" GROUP "${GROUP}")
+
+    # Group into "Source Files" and "Header Files"
+    if ("${FILE}" MATCHES ".*\\.cpp")
+       set(GROUP "Files${GROUP}")
+    elseif("${FILE}" MATCHES ".*\\.c")
+       set(GROUP "Files${GROUP}")
+    elseif("${FILE}" MATCHES ".*\\.h")
+       set(GROUP "Files${GROUP}")
+    endif()
+
+    source_group("${GROUP}" FILES "${FILE}")
+endforeach()
+
 
 # インクルードの設定
 include_directories(

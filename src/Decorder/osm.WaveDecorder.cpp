@@ -201,6 +201,12 @@ namespace osm
 					// それ以外
 					return false;
 				}
+
+				// 24bit and 32bit Wav is unsupported.
+				if (fmt.BitsPerSample == 24 || fmt.BitsPerSample == 32)
+				{
+					return false;
+				}
 			}
 			else if (STRICMP("data", chunk) == 0)
 			{

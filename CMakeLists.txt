@@ -19,6 +19,7 @@ endif()
 if (MSVC)
 	# “Á‚É‰½‚à
 else()
+	set(CMAKE_C_FLAGS " -fPIC" ${CMAKE_C_FLAGS})
 	set(CMAKE_CXX_FLAGS "-std=c++11 -fPIC" ${CMAKE_CXX_FLAGS})
 endif()
 

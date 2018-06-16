@@ -27,6 +27,8 @@ namespace osm
 		volatile bool			m_threading;
 		std::thread				m_thread;
 
+		HANDLE                  m_event = NULL;
+
 		bool					initializingCo = false;
 
 		void Reset();

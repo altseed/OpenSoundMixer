@@ -35,6 +35,15 @@ namespace osm
 
 		while (this_->m_threading)
 		{
+			// Wait
+			{
+				DWORD retval = WaitForSingleObject(this_->m_event, 2000);
+				if (retval != WAIT_OBJECT_0)
+				{
+					break;
+				}
+			}
+
 			uint32_t bufferFrames = 0;
 			this_->m_audioClient->GetBufferSize(&bufferFrames);
 			
@@ -88,6 +97,9 @@ namespace osm
 
 		initializingCo = SUCCEEDED(hr);
 
+		// Generate handle
+		m_event = CreateEvent(NULL, FALSE, FALSE, NULL);
+
 		// Get the audio endpoint device enumerator.
 		hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL,
 			 CLSCTX_ALL, __uuidof(IMMDeviceEnumerator), (void**)&m_context);
@@ -133,7 +145,7 @@ namespace osm
 		m_format.Samples.wValidBitsPerSample = m_format.Format.wBitsPerSample;
 		m_format.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
 
-		hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, 0, 
+		hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
 			defaultDevicePeriod, defaultDevicePeriod, &m_format.Format, NULL);
 		if (FAILED(hr)) {
 			return false;
@@ -143,6 +155,8 @@ namespace osm
 		if (FAILED(hr)) {
 			return false;
 		}
+
+		m_audioClient->SetEventHandle(m_event);
 
 		// Set sample rate converter
 		m_resampler.SetResampleRatio(m_format.Format.nSamplesPerSec / 44100.0);
@@ -162,6 +176,8 @@ namespace osm
 		Reset();
 
 		SafeRelease(m_context);
+
+		CloseHandle(m_event);
 
 		if (initializingCo)
 		{

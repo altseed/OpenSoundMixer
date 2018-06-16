@@ -21,12 +21,12 @@ namespace osm
 			MAX_LATENCY	= 128,
 			BUFFER_LEN	= MAX_LATENCY * 2,
 		};
-		double	m_resampleRatio;
+		double	m_resampleRatio = 0;
 		Sample	m_inBuf[BUFFER_LEN];
-		bool	m_isInit;
-		int32_t	m_inCur;
-		int32_t	m_outCur;
-		double	m_outResidure;
+		bool	m_isInit = false;
+		int32_t	m_inCur = 0;
+		int32_t	m_outCur = 0;
+		double	m_outResidure = 0;
 
 		/**
 		@brief	初期化を行う。

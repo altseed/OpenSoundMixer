@@ -23,6 +23,10 @@
 #define	STRICMP strcasecmp
 #endif
 
+#if _WIN32
+#include <Windows.h>
+#endif
+
 namespace osm
 {
 	template <class T>
@@ -119,8 +123,12 @@ namespace osm
 
 	inline void Sleep(int32_t ms)
 	{
+#if _WIN32
+		::Sleep(ms);
+#else
 		std::chrono::milliseconds d(ms);
 		std::this_thread::sleep_for(d);
+#endif
 	}
 }
 

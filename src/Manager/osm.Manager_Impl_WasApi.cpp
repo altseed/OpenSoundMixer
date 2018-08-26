@@ -29,15 +29,18 @@ namespace osm
 	{
 		Manager_Impl_WasApi* this_ = (Manager_Impl_WasApi*) p;
 
+		// Start device
+		this_->m_audioClient->Start();
+
 		const int32_t bufferDivision = 100;
 
 		bool requiredResampling = (this_->m_resampler.GetResampleRatio() != 1.0f);
 
-		while (this_->m_threading)
+		while (this_->m_threading && WAIT_OBJECT_0 != WaitForSingleObject(this_->m_audioProcessingDoneEvent, 0))
 		{
 			// Wait
 			{
-				DWORD retval = WaitForSingleObject(this_->m_event, 2000);
+				DWORD retval = WaitForSingleObject(this_->m_event, INFINITE);
 				if (retval != WAIT_OBJECT_0)
 				{
 					break;
@@ -47,6 +50,15 @@ namespace osm
 			uint32_t bufferFrames = 0;
 			this_->m_audioClient->GetBufferSize(&bufferFrames);
 			
+			// decrease padding
+			UINT32 padding = 0;
+			if (FAILED(this_->m_audioClient->GetCurrentPadding(&padding)))
+			{
+				continue;
+			}
+
+			bufferFrames -= padding;
+
 			Sample* outputBuffer = nullptr;
 			this_->m_audioRender->GetBuffer(bufferFrames, (BYTE**)&outputBuffer);
 			if (outputBuffer == NULL) {
@@ -58,18 +70,25 @@ namespace osm
 			int32_t outputCount = 0;
 			Sample buffer[unitSize];
 
-			while (bufferFrames - outputCount >= unitSize * 2)
+			while (bufferFrames - outputCount > 0)
 			{
 				if (requiredResampling)
 				{
-					int32_t sampleCount = this_->ReadSamples(buffer, unitSize);
+					auto requiredSize = bufferFrames - outputCount;
+					requiredSize = (requiredSize * (44100.0 / 48000.0));
+					requiredSize = std::min(unitSize, requiredSize);
+					
+					int32_t sampleCount = this_->ReadSamples(buffer, requiredSize);
 					auto result = this_->m_resampler.ProcessSamples(buffer, sampleCount, 
 						outputBuffer + outputCount, bufferFrames - outputCount);
 					outputCount += result.second;
+
+					if (result.second == 0) break;
 				}
 				else
 				{
-					int32_t sampleCount = this_->ReadSamples(outputBuffer + outputCount, unitSize);
+					auto requiredSize = std::min(unitSize, bufferFrames - outputCount);
+					int32_t sampleCount = this_->ReadSamples(outputBuffer + outputCount, requiredSize);
 					outputCount += sampleCount;
 				}
 			}
@@ -99,6 +118,7 @@ namespace osm
 
 		// Generate handle
 		m_event = CreateEvent(NULL, FALSE, FALSE, NULL);
+		m_audioProcessingDoneEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 
 		// Get the audio endpoint device enumerator.
 		hr = CoCreateInstance(__uuidof(MMDeviceEnumerator), NULL,
@@ -146,7 +166,7 @@ namespace osm
 		m_format.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
 
 		hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK,
-			defaultDevicePeriod, defaultDevicePeriod, &m_format.Format, NULL);
+			40 * 1000 * 10, 0, &m_format.Format, NULL);
 		if (FAILED(hr)) {
 			return false;
 		}
@@ -160,9 +180,6 @@ namespace osm
 
 		// Set sample rate converter
 		m_resampler.SetResampleRatio(m_format.Format.nSamplesPerSec / 44100.0);
-		
-		// Start device
-		m_audioClient->Start();
 		
 		m_threading = true;
 		m_thread = std::thread(ThreadFunc, this);

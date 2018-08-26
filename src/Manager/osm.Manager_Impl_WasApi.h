@@ -28,7 +28,7 @@ namespace osm
 		std::thread				m_thread;
 
 		HANDLE                  m_event = NULL;
-
+		HANDLE					m_audioProcessingDoneEvent = NULL;
 		bool					initializingCo = false;
 
 		void Reset();

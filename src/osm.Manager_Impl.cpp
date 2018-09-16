@@ -7,6 +7,8 @@ namespace osm
 {
 	int32_t Manager_Impl::ReadSamples(Sample* samples, int32_t sampleCount)
 	{
+		if (sampleCount == 0) return 0;
+
 		std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
 		// 合成処理
@@ -40,6 +42,9 @@ namespace osm
 				resampler->SetResampleRatio(ratio);
 				int32_t exceedance = resampler->GetInputExceedance();
 				inCount = std::min(tempBufferLen, (int32_t)ceil(sampleCount / ratio) + 1) - (exceedance / 16);
+
+				//inCount = std::max(inCount, 0);
+				assert(inCount >= 0);
 			}
 
 			int32_t rest = inCount;

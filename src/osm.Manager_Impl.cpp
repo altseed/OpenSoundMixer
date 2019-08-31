@@ -428,4 +428,14 @@ namespace osm
 		s->second.PanningPosition = Clamp(panningPosition, 1.0, -1.0);
 	}
 
+	float Manager_Impl::GetPlaybackPercent(int32_t id)
+	{
+		std::lock_guard<std::recursive_mutex> lock(GetMutex());
+		auto s = m_soundStates.find(id);
+		if (s == m_soundStates.end())
+			return 0.0f;
+
+		return s->second.SamplePos / 44100.0f / s->second.SoundPtr->GetLength();
+	}
+
 }

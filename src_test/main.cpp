@@ -155,6 +155,8 @@ int main(int argc, char **argv)
 	
 	while (manager->IsPlaying(id1) || manager->IsPlaying(id2))
 	{
+		// current playback position
+		//printf("percent %f\n", manager->GetPlaybackPercent(id1));
 		Sleep(1);
 	}
 

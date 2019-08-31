@@ -105,6 +105,8 @@ namespace osm
 
 		void SetPanningPosition(int32_t id, float panningPosition) override;
 
+		float GetPlaybackPercent(int32_t id) override;
+
 		// IReferenceを継承したデバイスオブジェクト向け定義
 #if !SWIG
 	public:

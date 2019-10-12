@@ -28,6 +28,12 @@ private:
     HANDLE m_audioProcessingDoneEvent = NULL;
     bool initializingCo = false;
 
+	int32_t channels_ = 2;
+    int32_t samplerPerBit_ = 16;
+
+	//! buffer for converting
+    std::vector<Sample> processingBuffer_;
+
     void Reset();
 
     static void ThreadFunc(void* p);

@@ -20,6 +20,20 @@ void Manager_Impl_WasApi::Reset() {
     }
 }
 
+static void Convert(Sample4ch32& dst, Sample& src) {
+    int ep = 1000;
+    dst.Values[0] = src.Left / 32767.0f * (2147483647.0f - ep);
+    dst.Values[1] = src.Left / 32767.0f * (2147483647.0f - ep);
+    dst.Values[2] = src.Right / 32767.0f * (2147483647.0f - ep);
+    dst.Values[3] = src.Right / 32767.0f * (2147483647.0f - ep);
+}
+
+static void Convert(Sample32& dst, Sample& src) {
+    int ep = 1000;
+    dst.Left = src.Left / 32767.0f * (2147483647.0f - ep);
+    dst.Right = src.Right / 32767.0f * (2147483647.0f - ep);
+}
+
 void Manager_Impl_WasApi::ThreadFunc(void* p) {
     Manager_Impl_WasApi* this_ = (Manager_Impl_WasApi*)p;
 
@@ -50,7 +64,7 @@ void Manager_Impl_WasApi::ThreadFunc(void* p) {
 
         bufferFrames -= padding;
 
-        Sample* outputBuffer = nullptr;
+        uint8_t* outputBuffer = nullptr;
         this_->m_audioRender->GetBuffer(bufferFrames, (BYTE**)&outputBuffer);
         if (outputBuffer == NULL) {
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -59,7 +73,7 @@ void Manager_Impl_WasApi::ThreadFunc(void* p) {
 
         const uint32_t unitSize = 44100 / bufferDivision;
         int32_t outputCount = 0;
-        Sample buffer[unitSize];
+        Sample readBuffer[unitSize];
 
         while (bufferFrames - outputCount > 0) {
             if (requiredResampling) {
@@ -67,16 +81,59 @@ void Manager_Impl_WasApi::ThreadFunc(void* p) {
                 requiredSize = (requiredSize * (44100.0 / 48000.0));
                 requiredSize = std::min(unitSize, requiredSize);
 
-                int32_t sampleCount = this_->ReadSamples(buffer, requiredSize);
-                auto result =
-                        this_->m_resampler.ProcessSamples(buffer, sampleCount, outputBuffer + outputCount, bufferFrames - outputCount);
-                outputCount += result.second;
+                int32_t sampleCount = this_->ReadSamples(readBuffer, requiredSize);
 
-                if (result.second == 0) break;
+                int32_t processedCount = bufferFrames - outputCount;
+                if (this_->samplerPerBit_ == 16) {
+                    auto target = reinterpret_cast<Sample*>(outputBuffer);
+                    auto result = this_->m_resampler.ProcessSamples(readBuffer, sampleCount, target + outputCount, processedCount);
+                    outputCount += result.second;
+                    if (result.second == 0) break;
+                } else {
+                    this_->processingBuffer_.resize(processedCount);
+
+                    auto result = this_->m_resampler.ProcessSamples(readBuffer, sampleCount, this_->processingBuffer_.data(), processedCount);
+
+                    if (this_->channels_ == 2 && this_->samplerPerBit_ == 32) {
+                        auto target = reinterpret_cast<Sample32*>(outputBuffer);
+                        for (int i = 0; i < result.second; i++) {
+                            Convert(target[i + outputCount], this_->processingBuffer_[i]);
+                        }
+                    } else if (this_->channels_ == 4 && this_->samplerPerBit_ == 32) {
+                        auto target = reinterpret_cast<Sample4ch32*>(outputBuffer);
+                        for (int i = 0; i < result.second; i++) {
+                            Convert(target[i + outputCount], this_->processingBuffer_[i]);
+                        }
+                    }
+
+                    outputCount += result.second;
+                    if (result.second == 0) break;
+                }
+
             } else {
-                auto requiredSize = std::min(unitSize, bufferFrames - outputCount);
-                int32_t sampleCount = this_->ReadSamples(outputBuffer + outputCount, requiredSize);
-                outputCount += sampleCount;
+                if (this_->samplerPerBit_ == 16) {
+                    auto target = reinterpret_cast<Sample*>(outputBuffer);
+                    auto requiredSize = std::min(unitSize, bufferFrames - outputCount);
+                    int32_t sampleCount = this_->ReadSamples(target + outputCount, requiredSize);
+                    outputCount += sampleCount;
+                } else {
+                    auto requiredSize = std::min(unitSize, bufferFrames - outputCount);
+                    int32_t sampleCount = this_->ReadSamples(readBuffer, requiredSize);
+
+                    if (this_->channels_ == 2 && this_->samplerPerBit_ == 32) {
+                        auto target = reinterpret_cast<Sample32*>(outputBuffer);
+                        for (int i = 0; i < sampleCount; i++) {
+                            Convert(target[i + outputCount], readBuffer[i]);
+                        }
+                    } else if (this_->channels_ == 4 && this_->samplerPerBit_ == 32) {
+                        auto target = reinterpret_cast<Sample4ch32*>(outputBuffer);
+                        for (int i = 0; i < sampleCount; i++) {
+                            Convert(target[i + outputCount], readBuffer[i]);
+                        }
+                    }
+
+                    outputCount += sampleCount;
+                }
             }
         }
 
@@ -136,7 +193,10 @@ bool Manager_Impl_WasApi::InitializeInternal() {
     }
 
     // Set the output format
-    m_format.Format = *deviceFormat;
+    WAVEFORMATEX format = *deviceFormat;
+    CoTaskMemFree(deviceFormat);
+    m_format.Format = format;
+
     m_format.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
     m_format.Format.nChannels = 2;
     m_format.Format.wBitsPerSample = 16;
@@ -150,9 +210,28 @@ bool Manager_Impl_WasApi::InitializeInternal() {
 
     hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, 40 * 1000 * 10, 0, &m_format.Format, NULL);
     if (FAILED(hr)) {
-        Log(LogType::Error, "Failed : AudioClient::Initialize");
-        return false;
+        SafeRelease(m_audioClient);
+
+        m_format.Format = format;
+
+        hr = m_device->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void**)&m_audioClient);
+        hr = m_audioClient->Initialize(
+                AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, 40 * 1000 * 10, 0, &m_format.Format, NULL);
+
+        if (FAILED(hr)) {
+            Log(LogType::Error, "Failed : AudioClient::Initialize");
+            return false;
+        }
     }
+
+    samplerPerBit_ = m_format.Format.wBitsPerSample;
+    channels_ = m_format.Format.nChannels;
+
+    if ((channels_ == 2 && samplerPerBit_ == 16) || (channels_ == 2 && samplerPerBit_ == 32) || (channels_ == 4 && samplerPerBit_ == 32)) {
+    } else {
+        Log(LogType::Error, "Failed : Not supported.");
+        return false;
+	}
 
     hr = m_audioClient->GetService(__uuidof(IAudioRenderClient), (void**)&m_audioRender);
     if (FAILED(hr)) {

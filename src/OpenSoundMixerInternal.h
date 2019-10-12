@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <array>
 #include <atomic>
 #include <memory>
 #include <string>
@@ -80,5 +81,14 @@ T Clamp(T t, U max_, V min_) {
 
     return t;
 }
+
+struct Sample32 {
+    int32_t Left;
+    int32_t Right;
+};
+
+struct Sample4ch32 {
+    std::array<int32_t, 4> Values;
+};
 
 }  // namespace osm

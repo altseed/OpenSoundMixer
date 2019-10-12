@@ -5,3 +5,8 @@
 *.cache
 *.suo
 *.sdf
+
+.DS_Store
+
+build/
+test_data/

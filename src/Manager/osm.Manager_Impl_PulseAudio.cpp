@@ -57,7 +57,7 @@ namespace osm
 				if( writableSize == 0)
 				{
 					iterate();
-					Sleep(1);
+					std::this_thread::sleep_for(std::chrono::milliseconds(1));
 					continue;
 				}
 	
@@ -75,7 +75,7 @@ namespace osm
 			}
 			else
 			{
-				Sleep(1);
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 
 			if(0<=this_->CALL_FUNCPTR_MV(pa_stream_get_underflow_index)(this_->m_stream))
@@ -94,7 +94,7 @@ namespace osm
 			if(writableSize == 0)
 			{
 				iterate();
-				Sleep(1);
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 			}
 			else
 			{
@@ -168,7 +168,7 @@ namespace osm
 			else
 			{
 				readyCount++;
-				Sleep(1);
+				std::this_thread::sleep_for(std::chrono::milliseconds(1));
 				if(readyCount>1000) break;
 			}
 		}

@@ -4,26 +4,23 @@
 #include "OpenSoundMixer.h"
 #include "OpenSoundMixerInternal.h"
 
-namespace osm
-{
-	/**
-	@brief	参照カウンタオブジェクト
-	*/
-	class ReferenceObject
-		: public IReference
-	{
-	private:
-		mutable std::atomic<int32_t> m_reference;
+namespace osm {
+/**
+@brief	Reference Counted
+*/
+class ReferenceObject : public IReference {
+private:
+    mutable std::atomic<int32_t> m_reference;
 
-	public:
-		ReferenceObject();
+public:
+    ReferenceObject();
 
-		virtual ~ReferenceObject();
+    virtual ~ReferenceObject();
 
-		virtual int AddRef();
+    virtual int AddRef();
 
-		virtual int GetRef();
+    virtual int GetRef();
 
-		virtual int Release();
-	};
-}
+    virtual int Release();
+};
+}  // namespace osm

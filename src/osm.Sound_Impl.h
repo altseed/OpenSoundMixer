@@ -9,51 +9,49 @@
 
 #include "Filter/osm.Resampler.h"
 
-namespace osm
-{
-	class Sound_Impl
-		: public Sound
-		, public ReferenceObject
-	{
-	private:
-		bool						m_isDecompressed;
-		std::vector<Sample>			m_samples;
+namespace osm {
+class Sound_Impl : public Sound, public ReferenceObject {
+private:
+    bool m_isDecompressed;
 
-		std::vector<uint8_t>		m_data;
-		std::shared_ptr<Decorder>	m_decorder;
-	
-		float						m_loopStart;
-		float						m_loopEnd;
-		bool						isLoopMode = false;
+    //! a buffer to store decompressed data
+    std::vector<Sample> m_samples;
 
-	public:
-		Sound_Impl();
-		virtual ~Sound_Impl();
+    //! a buffer to store compressed data
+    std::vector<uint8_t> m_data;
 
-		bool Load(const void* data, int32_t size, bool isDecompressed);
-		int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);
-		int32_t GetSampleCount() const;
+    //! decode a compressed data
+    std::shared_ptr<Decorder> m_decorder;
 
-		float GetLoopStartingPoint() const { return m_loopStart; }
+    float m_loopStart;
+    float m_loopEnd;
+    bool isLoopMode = false;
 
-		void SetLoopStartingPoint(float startingPoint) { m_loopStart = startingPoint; }
+public:
+    Sound_Impl();
+    virtual ~Sound_Impl();
 
-		float GetLoopEndPoint() const { return m_loopEnd; }
+    bool Load(const void* data, int32_t size, bool isDecompressed);
+    int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);
+    int32_t GetSampleCount() const;
 
-		void SetLoopEndPoint(float endPoint) { m_loopEnd = endPoint; }
+    float GetLoopStartingPoint() const { return m_loopStart; }
 
-		bool GetIsLoopingMode() const { return isLoopMode; }
+    void SetLoopStartingPoint(float startingPoint) { m_loopStart = startingPoint; }
 
-		void SetIsLoopingMode(bool isLoopingMode) { isLoopMode = isLoopingMode; }
+    float GetLoopEndPoint() const { return m_loopEnd; }
 
-		float GetLength() const override;
+    void SetLoopEndPoint(float endPoint) { m_loopEnd = endPoint; }
 
-		// IReferenceを継承したデバイスオブジェクト向け定義
-#if !SWIG
-	public:
-		virtual int GetRef() { return ReferenceObject::GetRef(); }
-		virtual int AddRef() { return ReferenceObject::AddRef(); }
-		virtual int Release() { return ReferenceObject::Release(); }
-#endif
-	};
-}
+    bool GetIsLoopingMode() const { return isLoopMode; }
+
+    void SetIsLoopingMode(bool isLoopingMode) { isLoopMode = isLoopingMode; }
+
+    float GetLength() const override;
+
+public:
+    virtual int GetRef() { return ReferenceObject::GetRef(); }
+    virtual int AddRef() { return ReferenceObject::AddRef(); }
+    virtual int Release() { return ReferenceObject::Release(); }
+};
+}  // namespace osm

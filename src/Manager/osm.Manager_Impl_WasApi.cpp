@@ -200,7 +200,7 @@ bool Manager_Impl_WasApi::InitializeInternal() {
     m_format.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
     m_format.Format.nChannels = 2;
     m_format.Format.wBitsPerSample = 16;
-    // m_format.Format.nSamplesPerSec = 48000;	// Need to use device sample rate
+    //// m_format.Format.nSamplesPerSec = 48000;	// Need to use device sample rate
     m_format.Format.nBlockAlign = m_format.Format.nChannels * m_format.Format.wBitsPerSample / 8;
     m_format.Format.nAvgBytesPerSec = m_format.Format.nBlockAlign * m_format.Format.nSamplesPerSec;
     m_format.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
@@ -210,13 +210,23 @@ bool Manager_Impl_WasApi::InitializeInternal() {
 
     hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, 40 * 1000 * 10, 0, &m_format.Format, NULL);
     if (FAILED(hr)) {
+    {
+        UINT32 bufferSize = 0;
+        m_audioClient->GetBufferSize(&bufferSize);
+
+        defaultDevicePeriod = (REFERENCE_TIME)(10000.0 * 1000 * bufferSize / m_format.Format.nSamplesPerSec + 0.5);
         SafeRelease(m_audioClient);
 
         m_format.Format = format;
+        m_format.dwChannelMask = SPEAKER_FRONT_LEFT | SPEAKER_FRONT_RIGHT;
+        m_format.Samples.wValidBitsPerSample = m_format.Format.wBitsPerSample;
+        m_format.SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
 
         hr = m_device->Activate(__uuidof(IAudioClient), CLSCTX_ALL, NULL, (void**)&m_audioClient);
         hr = m_audioClient->Initialize(
-                AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, 40 * 1000 * 10, 0, &m_format.Format, NULL);
+                AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, defaultDevicePeriod, 0, &m_format.Format, NULL);
+
+        Log(LogType::Error, std::to_string(defaultDevicePeriod).c_str());
 
         if (FAILED(hr)) {
             Log(LogType::Error, "Failed : AudioClient::Initialize");

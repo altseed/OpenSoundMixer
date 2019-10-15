@@ -210,7 +210,6 @@ bool Manager_Impl_WasApi::InitializeInternal() {
 
     hr = m_audioClient->Initialize(AUDCLNT_SHAREMODE_SHARED, AUDCLNT_STREAMFLAGS_EVENTCALLBACK, 40 * 1000 * 10, 0, &m_format.Format, NULL);
     if (FAILED(hr)) {
-    {
         UINT32 bufferSize = 0;
         m_audioClient->GetBufferSize(&bufferSize);
 

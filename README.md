@@ -10,7 +10,23 @@ This project includes the following projects.
 
 ## How to build
 
+- Windows
 
+```
+cd scripts
+GenerateProjects_x64.bat
+```
+
+Open a project in build directory
+
+- Linux
+
+```
+cd scripts
+GenerateProjectsWithSanitize.sh
+cd ../build
+make
+```
 
 ## Requirements
 

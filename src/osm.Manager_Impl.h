@@ -85,6 +85,8 @@ public:
 
     void Resume(int32_t id) override;
 
+    void Seek(int32_t id, float position) override;
+
     void SetVolume(int32_t id, float volume) override;
 
     void FadeIn(int32_t id, float second) override;

@@ -252,6 +252,16 @@ void Manager_Impl::Resume(int32_t id) {
     }
 }
 
+void Manager_Impl::Seek(int32_t id, float position) {
+
+    std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+    {
+        auto s = m_soundStates.find(id);
+        s->second.SamplePos = (int32_t)(position * 44100);
+    }
+}
+
 void Manager_Impl::SetVolume(int32_t id, float volume) {
     if (volume < 0.0f) volume = 0.0f;
 

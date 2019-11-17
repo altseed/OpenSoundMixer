@@ -84,6 +84,8 @@ public:
 
     virtual void Resume(int32_t id) = 0;
 
+    virtual void Seek(int32_t id, float position) = 0;
+
     virtual void SetVolume(int32_t id, float volume) = 0;
 
     virtual void FadeIn(int32_t id, float second) = 0;

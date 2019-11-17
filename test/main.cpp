@@ -133,6 +133,8 @@ int main(int argc, char** argv) {
     manager->FadeIn(id1, 3);
     Sleep(1000);
     auto id2 = manager->Play(staticSound);
+    Sleep(1000);
+    manager->Seek(id1, 0);
 
     while (manager->IsPlaying(id1) || manager->IsPlaying(id2)) {
         // current playback position

@@ -18,9 +18,17 @@ class Resampler;
 class Manager_Impl : public Manager, public ReferenceObject {
 private:
     struct SoundState {
+
+		//! current sampling point in a buffer
         int32_t SamplePos;
+
+		//! playing sound
         Sound_Impl* SoundPtr;
+
+		//! whether is paused?
         bool IsPaused;
+
+		//! volume
         float Volume;
 
         float FadeGradient;

@@ -2,6 +2,7 @@
 #include "osm.Manager_Impl.h"
 #include "Filter/osm.Panner.h"
 #include "osm.Sound_Impl.h"
+#include "osm.FastFourierTransform.h"
 
 namespace osm {
 int32_t Manager_Impl::ReadSamples(Sample* samples, int32_t sampleCount) {
@@ -254,6 +255,7 @@ void Manager_Impl::Resume(int32_t id) {
 
 void Manager_Impl::Seek(int32_t id, float position) {
 
+    // Get a lock
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
     {
@@ -370,6 +372,32 @@ float Manager_Impl::GetPlaybackPercent(int32_t id) {
     if (s == m_soundStates.end()) return 0.0f;
 
     return s->second.SamplePos / 44100.0f / s->second.SoundPtr->GetLength();
+}
+
+void Manager_Impl::GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window)
+{
+    // Get a lock
+    std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+    // "samplingRate" must be the power of 2.
+    if(samplingRate & (samplingRate - 1))
+    {
+        spectrums = nullptr;
+        return;
+    }
+
+    // Get wave samples
+    Sample* samples = (Sample*)malloc(samplingRate * sizeof(Sample));
+    auto s = m_soundStates.find(id);
+    int32_t offset = s->second.SamplePos - samplingRate;
+    while(offset < s->second.SamplePos)
+        offset += s->second.SoundPtr->GetSamples(samples, offset, samplingRate);
+
+    // Do fast fourier transform
+    FastFourierTransform(samples, spectrums, samplingRate, window);
+
+    // Free allocated memory
+    free(samples);
 }
 
 }  // namespace osm

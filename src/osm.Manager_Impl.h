@@ -109,6 +109,8 @@ public:
 
     float GetPlaybackPercent(int32_t id) override;
 
+    void GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window) override;
+
 public:
     virtual int GetRef() { return ReferenceObject::GetRef(); }
     virtual int AddRef() { return ReferenceObject::AddRef(); }

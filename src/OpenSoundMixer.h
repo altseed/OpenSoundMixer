@@ -60,6 +60,17 @@ public:
     virtual float GetLength() const = 0;
 };
 
+// Window Function Type
+enum class FFTWindow
+{
+    Rectangular,
+    Triangle,
+    Hamming,
+    Hanning,
+    Blackman,
+    BlackmanHarris
+};
+
 class Manager : public IReference {
 protected:
     Manager() {}
@@ -116,6 +127,8 @@ public:
     virtual void SetPanningPosition(int32_t id, float panningPosition) = 0;
 
     virtual float GetPlaybackPercent(int32_t id) = 0;
+
+    virtual void GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window) = 0;
 
     static Manager* Create();
 };

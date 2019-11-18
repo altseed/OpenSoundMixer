@@ -85,6 +85,8 @@ public:
 
     void Resume(int32_t id) override;
 
+    void Seek(int32_t id, float position) override;
+
     void SetVolume(int32_t id, float volume) override;
 
     void FadeIn(int32_t id, float second) override;
@@ -106,6 +108,8 @@ public:
     void SetPanningPosition(int32_t id, float panningPosition) override;
 
     float GetPlaybackPercent(int32_t id) override;
+
+    void GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window) override;
 
 public:
     virtual int GetRef() { return ReferenceObject::GetRef(); }

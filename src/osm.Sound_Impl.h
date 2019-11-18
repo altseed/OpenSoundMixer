@@ -10,6 +10,8 @@
 #include "Filter/osm.Resampler.h"
 
 namespace osm {
+
+// "SoundSource" class in Altseed
 class Sound_Impl : public Sound, public ReferenceObject {
 private:
     bool m_isDecompressed;

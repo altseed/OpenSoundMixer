@@ -7,7 +7,7 @@
 namespace osm {
 
 // Implemention of Fast Fourier Transform
-void FastFourierTransform(std::vector<Sample> samples, float* spectrums, int32_t samplingRate, FFTWindow window)
+void FastFourierTransform(const std::vector<Sample> &samples, float* spectrums, int32_t samplingRate, FFTWindow window)
 {
     // "samplingRate" must be the power of 2.
     if(samplingRate & (samplingRate - 1)) return;

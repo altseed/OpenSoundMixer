@@ -11,7 +11,7 @@
 
 namespace osm {
 
-// "SoundSource" class in Altseed
+// "SoundSource"
 class Sound_Impl : public Sound, public ReferenceObject {
 private:
     bool m_isDecompressed;

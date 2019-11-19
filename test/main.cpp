@@ -134,26 +134,26 @@ int main(int argc, char** argv) {
     Sleep(1000);
     auto id2 = manager->Play(staticSound);
 
-    /*
+    
     // Seeking Test
     //================================================================================
     Sleep(1000);
     manager->Seek(id1, 0);
     //================================================================================
-    */
+    
 
-    /*
+    
     // Fast Fourier Transform Test
     //================================================================================
     Sleep(1000);
-    float* spectrums = (float*)malloc(32768 * sizeof(float));
+    float* spectrums = new float[32768];
     manager->GetSpectrumData(id1, spectrums, 32768, osm::FFTWindow::Rectangular);
     if(spectrums != nullptr)
         for(int i = 0; i < 32768; ++i)
-            printf("spectrums[%05d] = %f    ", i, spectrums[i]);
-    free(spectrums);
+            printf("spectrums[%05d] = %f\n", i, spectrums[i]);
+    delete[] spectrums;
     //================================================================================
-    */
+    
 
     while (manager->IsPlaying(id1) || manager->IsPlaying(id2)) {
         // current playback position

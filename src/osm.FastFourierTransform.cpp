@@ -1,21 +1,24 @@
+#ifdef _WIN32
+#define _USE_MATH_DEFINES
+#endif
 
 #include "osm.FastFourierTransform.h"
 
 namespace osm {
 
 // Implemention of Fast Fourier Transform
-void FastFourierTransform(Sample* samples, float* spectrums, int32_t samplingRate, FFTWindow window)
+void FastFourierTransform(std::vector<Sample> samples, float* spectrums, int32_t samplingRate, FFTWindow window)
 {
     // "samplingRate" must be the power of 2.
-    if(samplingRate & (samplingRate - 1))
-    {
-        spectrums = nullptr;
-        return;
-    }
+    if(samplingRate & (samplingRate - 1)) return;
 
     // Allocate & initialize memroy
-    float* spectrumReal = (float*)malloc(samplingRate * sizeof(float));
-    float* spectrumImag = (float*)malloc(samplingRate * sizeof(float));
+    std::vector<float> spectrumReal;
+    spectrumReal.reserve(samplingRate);
+    spectrumReal.resize(samplingRate);
+    std::vector<float> spectrumImag;
+    spectrumImag.reserve(samplingRate);
+    spectrumImag.resize(samplingRate);
     for(int i = 0; i < samplingRate; ++i)
     {
         // Move wave data
@@ -71,10 +74,6 @@ void FastFourierTransform(Sample* samples, float* spectrums, int32_t samplingRat
     // Return spectrum data as real value
     for(int i = 0; i < samplingRate; ++i)
         spectrums[i] = sqrt(pow(spectrumReal[i], 2) + pow(spectrumImag[i], 2));
-
-    // Free allocated memory
-    free(spectrumReal);
-    free(spectrumImag);
 }
 
 // Bit Reverse

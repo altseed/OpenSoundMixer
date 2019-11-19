@@ -380,24 +380,28 @@ void Manager_Impl::GetSpectrumData(int32_t id, float* spectrums, int32_t samplin
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
     // "samplingRate" must be the power of 2.
-    if(samplingRate & (samplingRate - 1))
-    {
-        spectrums = nullptr;
-        return;
-    }
+    if(samplingRate & (samplingRate - 1)) return;
+    
+    // Find sound state related to id.
+    // If the sound state does not exist, do nothing.
+    auto s = m_soundStates.find(id);
+    if(s == m_soundStates.end()) return;
 
     // Get wave samples
-    Sample* samples = (Sample*)malloc(samplingRate * sizeof(Sample));
-    auto s = m_soundStates.find(id);
+    std::vector<Sample> samples;
+    samples.reserve(samplingRate);
+    samples.resize(samplingRate);
     int32_t offset = s->second.SamplePos - samplingRate;
+    int32_t writingPos = 0;
     while(offset < s->second.SamplePos)
-        offset += s->second.SoundPtr->GetSamples(samples, offset, samplingRate);
+    {
+        int32_t readSize = s->second.SoundPtr->GetSamples(&samples[writingPos], offset, samplingRate - writingPos);
+        offset += readSize;
+        writingPos += readSize;
+    }
 
     // Do fast fourier transform
     FastFourierTransform(samples, spectrums, samplingRate, window);
-
-    // Free allocated memory
-    free(samples);
 }
 
 }  // namespace osm

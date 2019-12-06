@@ -146,12 +146,10 @@ int main(int argc, char** argv) {
     // Fast Fourier Transform Test
     //================================================================================
     Sleep(1000);
-    float* spectrums = new float[32768];
+    std::vector<float> spectrums(32768);
     manager->GetSpectrumData(id1, spectrums, 32768, osm::FFTWindow::Rectangular);
-    if(spectrums != nullptr)
-        for(int i = 0; i < 32768; ++i)
-            printf("spectrums[%05d] = %f\n", i, spectrums[i]);
-    delete[] spectrums;
+    for(int i = 0; i < 32768; ++i)
+        printf("spectrums[%05d] = %f\n", i, spectrums[i]);
     //================================================================================
     
 

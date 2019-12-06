@@ -128,7 +128,7 @@ public:
 
     virtual float GetPlaybackPercent(int32_t id) = 0;
 
-    virtual void GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window) = 0;
+    virtual void GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window) = 0;
 
     static Manager* Create();
 };

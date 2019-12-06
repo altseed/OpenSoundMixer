@@ -374,13 +374,13 @@ float Manager_Impl::GetPlaybackPercent(int32_t id) {
     return s->second.SamplePos / 44100.0f / s->second.SoundPtr->GetLength();
 }
 
-void Manager_Impl::GetSpectrumData(int32_t id, float* spectrums, int32_t samplingRate, FFTWindow window)
+void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window)
 {
     // Get a lock
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
-    // "samplingRate" must be the power of 2.
-    if(samplingRate & (samplingRate - 1)) return;
+    // "sampleNum" must be the power of 2.
+    if(sampleNum & (sampleNum - 1)) return;
     
     // Find sound state related to id.
     // If the sound state does not exist, do nothing.
@@ -388,20 +388,23 @@ void Manager_Impl::GetSpectrumData(int32_t id, float* spectrums, int32_t samplin
     if(s == m_soundStates.end()) return;
 
     // Get wave samples
-    std::vector<Sample> samples;
-    samples.reserve(samplingRate);
-    samples.resize(samplingRate);
-    int32_t offset = s->second.SamplePos - samplingRate;
+    std::vector<Sample> samples(sampleNum, {0, 0});
+    int32_t offset = s->second.SamplePos - sampleNum;
     int32_t writingPos = 0;
+    if(offset < 0)
+    {
+        writingPos = -offset;
+        offset = 0;
+    }
     while(offset < s->second.SamplePos)
     {
-        int32_t readSize = s->second.SoundPtr->GetSamples(&samples[writingPos], offset, samplingRate - writingPos);
+        int32_t readSize = s->second.SoundPtr->GetSamples(&samples[writingPos], offset, sampleNum - writingPos);
         offset += readSize;
         writingPos += readSize;
     }
 
     // Do fast fourier transform
-    FastFourierTransform(samples, spectrums, samplingRate, window);
+    FastFourierTransform(samples, spectrums, sampleNum, window);
 }
 
 }  // namespace osm

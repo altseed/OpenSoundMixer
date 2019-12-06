@@ -11,23 +11,19 @@
 namespace osm {
 
 // Implemention of Fast Fourier Transform
-void FastFourierTransform(const std::vector<Sample> &samples, float* spectrums, int32_t samplingRate, FFTWindow window)
+int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window)
 {
-    // "samplingRate" must be the power of 2.
-    if(samplingRate & (samplingRate - 1)) return;
+    // "sampleNum" must be the power of 2.
+    if(sampleNum & (sampleNum - 1)) return -1;
 
     // Allocate & initialize memroy
-    std::vector<float> spectrumReal;
-    spectrumReal.reserve(samplingRate);
-    spectrumReal.resize(samplingRate);
-    std::vector<float> spectrumImag;
-    spectrumImag.reserve(samplingRate);
-    spectrumImag.resize(samplingRate);
-    for(int i = 0; i < samplingRate; ++i)
+    std::vector<float> spectrumReal(sampleNum);
+    std::vector<float> spectrumImag(sampleNum);
+    for(int i = 0; i < sampleNum; ++i)
     {
         // Move wave data
-        Sample sample = samples[BitReverse(i, samplingRate)];
-        spectrumReal[i] = (sample.Left + sample.Right);
+        Sample sample = samples[BitReverse(i, sampleNum)];
+        spectrumReal[i] = (sample.Left + sample.Right) / 32768.0f;
         spectrumImag[i] = 0.0;
 
         // Apply window function
@@ -37,30 +33,30 @@ void FastFourierTransform(const std::vector<Sample> &samples, float* spectrums, 
                 break;
 
             case FFTWindow::Triangle:
-                spectrumReal[i] *= Triangle((float)i / (float)samplingRate);
+                spectrumReal[i] *= Triangle((float)i / (float)sampleNum);
                 break;
 
             case FFTWindow::Hamming:
-                spectrumReal[i] *= Hamming((float)i / (float)samplingRate);
+                spectrumReal[i] *= Hamming((float)i / (float)sampleNum);
                 break;
 
             case FFTWindow::Hanning:
-                spectrumReal[i] *= Hanning((float)i / (float)samplingRate);
+                spectrumReal[i] *= Hanning((float)i / (float)sampleNum);
                 break;
 
             case FFTWindow::Blackman:
-                spectrumReal[i] *= Blackman((float)i / (float)samplingRate);
+                spectrumReal[i] *= Blackman((float)i / (float)sampleNum);
                 break;
 
             case FFTWindow::BlackmanHarris:
-                spectrumReal[i] *= BlackmanHarris((float)i / (float)samplingRate);
+                spectrumReal[i] *= BlackmanHarris((float)i / (float)sampleNum);
                 break;
         }
     }
 
     // Fast Fourier Transform
-    for(int i = 1; i < samplingRate; i *= 2)
-        for(int j = 0; j < samplingRate; j += i * 2)
+    for(int i = 1; i < sampleNum; i *= 2)
+        for(int j = 0; j < sampleNum; j += i * 2)
             for(int k = 0; k < i; ++k)
             {
                 int m = j + k;
@@ -76,8 +72,10 @@ void FastFourierTransform(const std::vector<Sample> &samples, float* spectrums, 
             }
 
     // Return spectrum data as real value
-    for(int i = 0; i < samplingRate; ++i)
+    for(int i = 0; i < sampleNum; ++i)
         spectrums[i] = sqrt(pow(spectrumReal[i], 2) + pow(spectrumImag[i], 2));
+
+    return 0;
 }
 
 // Bit Reverse

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <vector>
 #include <functional>
 
 namespace osm {

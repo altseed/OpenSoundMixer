@@ -112,8 +112,8 @@ public:
     void GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t samplingRate, FFTWindow window) override;
 
 public:
-    virtual int GetRef() { return ReferenceObject::GetRef(); }
-    virtual int AddRef() { return ReferenceObject::AddRef(); }
-    virtual int Release() { return ReferenceObject::Release(); }
+    virtual int GetRef() override { return ReferenceObject::GetRef(); }
+    virtual int AddRef() override { return ReferenceObject::AddRef(); }
+    virtual int Release() override { return ReferenceObject::Release(); }
 };
 }  // namespace osm

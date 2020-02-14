@@ -56,7 +56,7 @@ public:
 
     int32_t GetSamples(Sample* samples, int32_t offset, int32_t count) override;
 
-    bool GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size);
+    bool GetAllSamples(Sample* samples, int32_t count, uint8_t* data, int32_t size) override;
 
     int32_t GetSampleCount() override;
 

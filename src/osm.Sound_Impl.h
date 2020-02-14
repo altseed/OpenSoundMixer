@@ -37,23 +37,23 @@ public:
     int32_t GetSamples(Sample* samples, int32_t offset, int32_t count);
     int32_t GetSampleCount() const;
 
-    float GetLoopStartingPoint() const { return m_loopStart; }
+    float GetLoopStartingPoint() const override { return m_loopStart; }
 
-    void SetLoopStartingPoint(float startingPoint) { m_loopStart = startingPoint; }
+    void SetLoopStartingPoint(float startingPoint) override { m_loopStart = startingPoint; }
 
-    float GetLoopEndPoint() const { return m_loopEnd; }
+    float GetLoopEndPoint() const override { return m_loopEnd; }
 
-    void SetLoopEndPoint(float endPoint) { m_loopEnd = endPoint; }
+    void SetLoopEndPoint(float endPoint) override { m_loopEnd = endPoint; }
 
-    bool GetIsLoopingMode() const { return isLoopMode; }
+    bool GetIsLoopingMode() const override { return isLoopMode; }
 
-    void SetIsLoopingMode(bool isLoopingMode) { isLoopMode = isLoopingMode; }
+    void SetIsLoopingMode(bool isLoopingMode) override { isLoopMode = isLoopingMode; }
 
     float GetLength() const override;
 
 public:
-    virtual int GetRef() { return ReferenceObject::GetRef(); }
-    virtual int AddRef() { return ReferenceObject::AddRef(); }
-    virtual int Release() { return ReferenceObject::Release(); }
+    virtual int GetRef() override { return ReferenceObject::GetRef(); }
+    virtual int AddRef() override { return ReferenceObject::AddRef(); }
+    virtual int Release() override { return ReferenceObject::Release(); }
 };
 }  // namespace osm

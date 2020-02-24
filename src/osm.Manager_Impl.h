@@ -109,7 +109,7 @@ public:
 
     void SetPlaybackPosition(int32_t id, float position) override;
 
-    void GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t samplingRate, FFTWindow window) override;
+    void GetSpectrumData(int32_t id, std::vector<float> &spectrums, FFTWindow window) override;
 
 public:
     virtual int GetRef() override { return ReferenceObject::GetRef(); }

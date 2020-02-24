@@ -374,8 +374,10 @@ void Manager_Impl::SetPlaybackPosition(int32_t id, float position) {
     }
 }
 
-void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window)
+void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, FFTWindow window)
 {
+    int32_t sampleNum = spectrums.size();
+
     // Get a lock
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 

@@ -360,7 +360,7 @@ float Manager_Impl::GetPlaybackPosition(int32_t id) {
     auto s = m_soundStates.find(id);
     if (s == m_soundStates.end()) return 0.0f;
 
-    return s->second.SamplePos / 44100.0f / s->second.SoundPtr->GetLength();
+    return s->second.SamplePos / 44100.0f;
 }
 
 void Manager_Impl::SetPlaybackPosition(int32_t id, float position) {

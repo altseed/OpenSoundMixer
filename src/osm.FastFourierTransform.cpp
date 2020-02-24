@@ -11,8 +11,10 @@
 namespace osm {
 
 // Implemention of Fast Fourier Transform
-int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window)
+int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> &spectrums, FFTWindow window)
 {
+    int32_t sampleNum = spectrums.size();
+
     // "sampleNum" must be the power of 2.
     if(sampleNum & (sampleNum - 1)) return -1;
 

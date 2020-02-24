@@ -404,7 +404,7 @@ void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, in
     }
 
     // Do fast fourier transform
-    FastFourierTransform(samples, spectrums, sampleNum, window);
+    FastFourierTransform(samples, spectrums, window);
 }
 
 }  // namespace osm

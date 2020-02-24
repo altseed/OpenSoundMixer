@@ -96,8 +96,6 @@ public:
 
     virtual void Resume(int32_t id) = 0;
 
-    virtual void Seek(int32_t id, float position) = 0;
-
     virtual void SetVolume(int32_t id, float volume) = 0;
 
     virtual void FadeIn(int32_t id, float second) = 0;
@@ -127,7 +125,9 @@ public:
 
     virtual void SetPanningPosition(int32_t id, float panningPosition) = 0;
 
-    virtual float GetPlaybackPercent(int32_t id) = 0;
+    virtual float GetPlaybackPosition(int32_t id) = 0;
+
+    virtual void SetPlaybackPosition(int32_t id, float playbackPosition) = 0;
 
     virtual void GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window) = 0;
 

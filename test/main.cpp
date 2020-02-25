@@ -138,7 +138,7 @@ int main(int argc, char** argv) {
     // Seeking Test
     //================================================================================
     Sleep(1000);
-    manager->Seek(id1, 0);
+    manager->SetPlaybackPosition(id1, 0);
     //================================================================================
     
 
@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
     //================================================================================
     Sleep(1000);
     std::vector<float> spectrums(32768);
-    manager->GetSpectrumData(id1, spectrums, 32768, osm::FFTWindow::Rectangular);
+    manager->GetSpectrumData(id1, spectrums, osm::FFTWindow::Rectangular);
     for(int i = 0; i < 32768; ++i)
         printf("spectrums[%05d] = %f\n", i, spectrums[i]);
     //================================================================================

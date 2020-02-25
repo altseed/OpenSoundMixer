@@ -8,7 +8,7 @@
 namespace osm {
 
 // Implemention of Fast Fourier Transform
-int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window);
+int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> &spectrums, FFTWindow window);
 
 // Bit Reverse
 static int BitReverse(int32_t x, int32_t x_max);

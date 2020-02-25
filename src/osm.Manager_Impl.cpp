@@ -253,17 +253,6 @@ void Manager_Impl::Resume(int32_t id) {
     }
 }
 
-void Manager_Impl::Seek(int32_t id, float position) {
-
-    // Get a lock
-    std::lock_guard<std::recursive_mutex> lock(GetMutex());
-
-    {
-        auto s = m_soundStates.find(id);
-        s->second.SamplePos = (int32_t)(position * 44100);
-    }
-}
-
 void Manager_Impl::SetVolume(int32_t id, float volume) {
     if (volume < 0.0f) volume = 0.0f;
 
@@ -366,16 +355,29 @@ void Manager_Impl::SetPanningPosition(int32_t id, float panningPosition) {
     s->second.PanningPosition = Clamp(panningPosition, 1.0, -1.0);
 }
 
-float Manager_Impl::GetPlaybackPercent(int32_t id) {
+float Manager_Impl::GetPlaybackPosition(int32_t id) {
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
     auto s = m_soundStates.find(id);
     if (s == m_soundStates.end()) return 0.0f;
 
-    return s->second.SamplePos / 44100.0f / s->second.SoundPtr->GetLength();
+    return s->second.SamplePos / 44100.0f;
 }
 
-void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, int32_t sampleNum, FFTWindow window)
+void Manager_Impl::SetPlaybackPosition(int32_t id, float position) {
+
+    // Get a lock
+    std::lock_guard<std::recursive_mutex> lock(GetMutex());
+
+    {
+        auto s = m_soundStates.find(id);
+        s->second.SamplePos = (int32_t)(position * 44100);
+    }
+}
+
+void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, FFTWindow window)
 {
+    int32_t sampleNum = spectrums.size();
+
     // Get a lock
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
@@ -404,7 +406,7 @@ void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, in
     }
 
     // Do fast fourier transform
-    FastFourierTransform(samples, spectrums, sampleNum, window);
+    FastFourierTransform(samples, spectrums, window);
 }
 
 }  // namespace osm

@@ -129,7 +129,7 @@ public:
 
     virtual void SetPlaybackPosition(int32_t id, float playbackPosition) = 0;
 
-    virtual void GetSpectrumData(int32_t id, std::vector<float> &spectrums, FFTWindow window) = 0;
+    virtual void GetSpectrum(int32_t id, std::vector<float> &spectrums, FFTWindow window) = 0;
 
     static Manager* Create();
 };

@@ -374,7 +374,7 @@ void Manager_Impl::SetPlaybackPosition(int32_t id, float position) {
     }
 }
 
-void Manager_Impl::GetSpectrumData(int32_t id, std::vector<float> &spectrums, FFTWindow window)
+void Manager_Impl::GetSpectrum(int32_t id, std::vector<float> &spectrums, FFTWindow window)
 {
     int32_t sampleNum = spectrums.size();
 

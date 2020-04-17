@@ -147,7 +147,7 @@ int main(int argc, char** argv) {
     //================================================================================
     Sleep(1000);
     std::vector<float> spectrums(32768);
-    manager->GetSpectrumData(id1, spectrums, osm::FFTWindow::Rectangular);
+    manager->GetSpectrum(id1, spectrums, osm::FFTWindow::Rectangular);
     for(int i = 0; i < 32768; ++i)
         printf("spectrums[%05d] = %f\n", i, spectrums[i]);
     //================================================================================

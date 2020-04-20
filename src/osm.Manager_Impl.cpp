@@ -368,10 +368,13 @@ void Manager_Impl::SetPlaybackPosition(int32_t id, float position) {
     // Get a lock
     std::lock_guard<std::recursive_mutex> lock(GetMutex());
 
-    {
-        auto s = m_soundStates.find(id);
-        s->second.SamplePos = (int32_t)(position * 44100);
-    }
+    auto s = m_soundStates.find(id);
+    if (s == m_soundStates.end()) return;
+
+	position = std::max(0.0f, position);
+    position = std::min(0.0f, s->second.SoundPtr->GetLength());
+
+    s->second.SamplePos = (int32_t)(position * 44100);
 }
 
 void Manager_Impl::GetSpectrum(int32_t id, std::vector<float> &spectrums, FFTWindow window)

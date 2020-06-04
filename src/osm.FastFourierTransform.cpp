@@ -20,13 +20,14 @@ int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> 
 
     // Allocate & initialize memroy
     std::vector<float> spectrumReal(sampleNum);
-    std::vector<float> spectrumImag(sampleNum);
+    std::vector<float> spectrumImag(sampleNum, 0.0f);
     for(int i = 0; i < sampleNum; ++i)
     {
+        int iRev = BitReverse(i, sampleNum);
+
         // Move wave data
-        Sample sample = samples[BitReverse(i, sampleNum)];
+        Sample sample = samples[iRev];
         spectrumReal[i] = (sample.Left + sample.Right) / 32768.0f;
-        spectrumImag[i] = 0.0;
 
         // Apply window function
         switch(window)
@@ -35,23 +36,23 @@ int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> 
                 break;
 
             case FFTWindow::Triangle:
-                spectrumReal[i] *= Triangle((float)i / (float)sampleNum);
+                spectrumReal[i] *= Triangle((float)iRev / (float)sampleNum);
                 break;
 
             case FFTWindow::Hamming:
-                spectrumReal[i] *= Hamming((float)i / (float)sampleNum);
+                spectrumReal[i] *= Hamming((float)iRev / (float)sampleNum);
                 break;
 
             case FFTWindow::Hanning:
-                spectrumReal[i] *= Hanning((float)i / (float)sampleNum);
+                spectrumReal[i] *= Hanning((float)iRev / (float)sampleNum);
                 break;
 
             case FFTWindow::Blackman:
-                spectrumReal[i] *= Blackman((float)i / (float)sampleNum);
+                spectrumReal[i] *= Blackman((float)iRev / (float)sampleNum);
                 break;
 
             case FFTWindow::BlackmanHarris:
-                spectrumReal[i] *= BlackmanHarris((float)i / (float)sampleNum);
+                spectrumReal[i] *= BlackmanHarris((float)iRev / (float)sampleNum);
                 break;
         }
     }

@@ -13,7 +13,7 @@ double PCM::GetLength() const {
 
 int32_t PCM::GetSampleCountAs44100Stereo16bit() const {
     auto length = GetLength();
-    return length * 44100;
+    return static_cast<int32_t>(length * 44100);
 }
 
 void PCM::GetSampleAs44100Stereo16bit(int32_t frame, Sample& sample) const {
@@ -60,8 +60,8 @@ void PCM::GetSampleAs44100Stereo16bit(int32_t frame, Sample& sample) const {
             }
         }
 
-        sample.Left = (1.0 - originalFrameD) * sample.Left;
-        sample.Right = (1.0 - originalFrameD) * sample.Right;
+        sample.Left = static_cast<int16_t>((1.0 - originalFrameD) * sample.Left);
+        sample.Right = static_cast<int16_t>((1.0 - originalFrameD) * sample.Right);
     } else {
         auto data = &(m_data[originalFrameR * originalFrameByte]);
         short left1, left2, right1, right2;

@@ -70,8 +70,8 @@ int FastFourierTransform(const std::vector<Sample> &samples, std::vector<float> 
                 double mi = spectrumImag[m] + spectrumImag[n] * tr + spectrumReal[n] * ti;
                 double nr = spectrumReal[m] - spectrumReal[n] * tr + spectrumImag[n] * ti;
                 double ni = spectrumImag[m] - spectrumImag[n] * tr - spectrumReal[n] * ti;
-                spectrumReal[m] = mr; spectrumImag[m] = mi;
-                spectrumReal[n] = nr; spectrumImag[n] = ni;
+                spectrumReal[m] = mr; spectrumImag[m] = static_cast<float>(mi);
+                spectrumReal[n] = nr; spectrumImag[n] = static_cast<float>(ni);
             }
 
     // Return spectrum data as real value

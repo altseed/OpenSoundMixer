@@ -194,7 +194,7 @@ int32_t OggDecorder::GetSamples(Sample* samples, int32_t offset, int32_t count) 
             auto sample = (offset + i) - m_original.CurrentSample;
             auto sampleR = (int32_t)sample;
 
-            int16_t left1, left2, right1, right2;
+            int16_t left1, right1;
 
             if (sampleR >= sampleCount) {
                 m_original.CurrentSample += i;
@@ -271,8 +271,8 @@ int32_t OggDecorder::GetSamples(Sample* samples, int32_t offset, int32_t count) 
                     right1 = left1;
                 }
 
-                samples[i].Left = left1 * (1.0 - sampleD);
-                samples[i].Right = right1 * (1.0 - sampleD);
+                samples[i].Left = static_cast<int16_t>(left1 * (1.0 - sampleD));
+                samples[i].Right = static_cast<int16_t>(right1 * (1.0 - sampleD));
 
                 // remove used samples
                 m_original.CurrentSample = sampleEnd_i;
@@ -296,8 +296,8 @@ int32_t OggDecorder::GetSamples(Sample* samples, int32_t offset, int32_t count) 
                     right2 = left2;
                 }
 
-                samples[i].Left = left1 * (1.0 - sampleD) + left2 * (sampleD);
-                samples[i].Right = right1 * (1.0 - sampleD) + right2 * (sampleD);
+                samples[i].Left = static_cast<int16_t>(left1 * (1.0 - sampleD) + left2 * (sampleD));
+                samples[i].Right = static_cast<int16_t>(right1 * (1.0 - sampleD) + right2 * (sampleD));
             }
         }
     }

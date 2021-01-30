@@ -1,6 +1,3 @@
-
-set(CMAKE_CONFIGURATION_TYPES Debug Release CACHE TYPE INTERNAL FORCE )
-
 project(OpenSoundMixer)
 
 #
